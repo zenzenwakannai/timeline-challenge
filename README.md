@@ -32,9 +32,7 @@ Implement interactive features for a Timeline component. We will provide a basic
 
 #### Behavior
 
-<!-- TODO: add screen recording here to show user behavior -->
-
-<video controls src="./readme-assets/01-input.mp4"></video>
+https://github.com/user-attachments/assets/8dd5ef2b-6b57-43dc-91b3-0d322d148781
 
 - [ ] The displayed value updates immediately while typing, but `onChange` is not triggered until input is confirmed
 - [ ] Clicking outside the input field removes focus and changes the value
@@ -52,7 +50,7 @@ Implement interactive features for a Timeline component. We will provide a basic
 
 ### 2. Play Controls Behavior
 
-<video controls src="./readme-assets/02-play-controls.mp4"></video>
+https://github.com/user-attachments/assets/9a669854-e0c5-4950-8364-10fe0b40d16b
 
 - [ ] Current Time is always between `0ms` and the Duration
 - [ ] Current Time adjusts if it exceeds the newly set Duration
@@ -63,7 +61,7 @@ Implement interactive features for a Timeline component. We will provide a basic
 
 ### 3. Ruler Behavior
 
-<video controls src="./readme-assets/03-ruler.mp4"></video>
+https://github.com/user-attachments/assets/42190ade-f708-45a1-8168-2be779c66390
 
 - [ ] Clicking or dragging on the Ruler updates the Current Time and Playhead position
 - [ ] Horizontal scrolling of the Ruler is synchronized with the Keyframe List
@@ -72,13 +70,13 @@ Implement interactive features for a Timeline component. We will provide a basic
 
 ### 4. Track List Behavior
 
-<video controls src="./readme-assets/04-track-list.mp4"></video>
+https://github.com/user-attachments/assets/94b5e2c8-ef32-488e-97e4-d53036bbf2f7
 
 - [ ] Vertical scrolling of the Track List is synchronized with the Keyframe List
 
 ### 5. Keyframe List Behavior
 
-<video controls src="./readme-assets/05-keyframe-list.mp4"></video>
+https://github.com/user-attachments/assets/99826161-f821-4e4d-b9a8-b59c16d9894e
 
 - [ ] Vertical scrolling is synchronized with the Track List
 - [ ] Horizontal scrolling is synchronized with the Ruler
@@ -87,7 +85,7 @@ Implement interactive features for a Timeline component. We will provide a basic
 
 ### 6. Playhead Behavior
 
-<video controls src="./readme-assets/06-playhead.mp4"></video>
+https://github.com/user-attachments/assets/3940cd0d-dd9d-4331-9172-592462ad65d3
 
 - [ ] Playhead moves in sync with the Ruler and Keyframe List during horizontal scrolling
 - [ ] Playhead maintains its relative position during horizontal scrolling
