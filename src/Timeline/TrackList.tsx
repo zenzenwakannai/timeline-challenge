@@ -6,7 +6,7 @@ export const TrackList = () => {
       className="grid grid-flow-row auto-rows-[40px]
       border-r border-solid border-r-gray-700 
       overflow-auto"
-      data-test-id="track-list"
+      data-testid="track-list"
     >
       <div className="p-2">
         <div>Track A</div>

@@ -19,14 +19,14 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
     <div
       className="flex items-center justify-between border-b border-r border-solid border-gray-700 
  px-2"
-      data-test-id="play-controls"
+      data-testid="play-controls"
     >
       <fieldset className="flex gap-1">
         Current
         <input
           className="bg-gray-700 px-1 rounded"
           type="number"
-          data-test-id="time"
+          data-testid="time"
           min={0}
           max={2000}
           step={10}
@@ -39,7 +39,7 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
         <input
           className="bg-gray-700 px-1 rounded"
           type="number"
-          data-test-id="max-time"
+          data-testid="max-time"
           min={100}
           max={2000}
           step={10}
