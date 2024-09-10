@@ -8,7 +8,7 @@ export const Ruler = () => {
       overflow-x-auto overflow-y-hidden"
       data-testid="ruler"
     >
-      <div className="w-[2000px] h-6 rounded-md bg-white/25"></div>
+      <div className="w-[2000px] h-6 rounded-md bg-white/25" data-testid="ruler-bar"></div>
     </div>
   );
 };

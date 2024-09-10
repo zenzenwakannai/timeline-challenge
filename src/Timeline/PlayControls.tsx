@@ -26,7 +26,7 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
         <input
           className="bg-gray-700 px-1 rounded"
           type="number"
-          data-testid="time"
+          data-testid="current-time-input"
           min={0}
           max={2000}
           step={10}
@@ -39,7 +39,7 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
         <input
           className="bg-gray-700 px-1 rounded"
           type="number"
-          data-testid="max-time"
+          data-testid="duration-input"
           min={100}
           max={2000}
           step={10}
