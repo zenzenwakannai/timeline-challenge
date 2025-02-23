@@ -21,7 +21,7 @@ export const Timeline = () => {
         duration={duration}
         setDuration={setDuration}
       />
-      <Ruler />
+      <Ruler setTime={setTime} duration={duration} />
       <TrackList />
       <KeyframeList />
       <Playhead time={time} />
