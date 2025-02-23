@@ -8,7 +8,7 @@ import React, {
 import { roundToTen } from "../utils/numbers";
 import { processInputValue } from "../utils/strings";
 
-type NumberInputProps = {
+export type NumberInputProps = {
   value: number;
   onChange: (value: number) => void;
   min?: number;

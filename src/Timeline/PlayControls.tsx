@@ -2,7 +2,7 @@ import { useCallback, useLayoutEffect } from "react";
 import { NumberInput } from "./NumberInput";
 import { MAX_DURATION, MIN_DURATION, MIN_TIME } from "../constants";
 
-type PlayControlsProps = {
+export type PlayControlsProps = {
   time: number;
   setTime: (time: number) => void;
   duration: number;

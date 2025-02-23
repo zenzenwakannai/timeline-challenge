@@ -1,4 +1,4 @@
-type PlayheadProps = {
+export type PlayheadProps = {
   time: number;
 };
 
