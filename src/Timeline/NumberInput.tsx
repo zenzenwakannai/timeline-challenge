@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 type NumberInputProps = {
   value: number;
@@ -19,6 +19,10 @@ export const NumberInput = ({
 }: NumberInputProps) => {
   const [displayedValue, setDisplayedValue] = useState(String(value));
 
+  useEffect(() => {
+    setDisplayedValue(String(value));
+  }, [value]);
+
   const confirmValue = useCallback(() => {
     onChange(Number(displayedValue));
   }, [displayedValue, onChange]);
@@ -31,6 +35,22 @@ export const NumberInput = ({
     confirmValue();
   }, [confirmValue]);
 
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      const { key } = e;
+
+      if (key === "ArrowUp" || key === "ArrowDown") {
+        const isIncrement = key === "ArrowUp";
+        const stepSize = step ?? 1;
+        const adjustedStep = isIncrement ? stepSize : -stepSize;
+        const newValue = Number(displayedValue) + adjustedStep;
+
+        onChange(Number(newValue));
+      }
+    },
+    [displayedValue, onChange, step],
+  );
+
   return (
     <input
       className="rounded bg-gray-700 px-1"
@@ -38,6 +58,7 @@ export const NumberInput = ({
       value={displayedValue}
       onChange={handleChange}
       onBlur={handleBlur}
+      onKeyDown={handleKeyDown}
       min={min}
       max={max}
       step={step}

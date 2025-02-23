@@ -54,4 +54,13 @@ describe("NumberInput", () => {
 
     expect(defaultProps.onChange).toHaveBeenCalledWith(1990);
   });
+
+  it("confirms value on ArrowDown key", () => {
+    render(<NumberInput {...defaultProps} />);
+    const input = screen.getByTestId("test-input");
+
+    fireEvent.keyDown(input, { key: "ArrowDown", code: "ArrowDown" });
+
+    expect(defaultProps.onChange).toHaveBeenCalledWith(1990);
+  });
 });
