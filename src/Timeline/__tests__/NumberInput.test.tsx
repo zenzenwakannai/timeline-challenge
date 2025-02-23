@@ -250,4 +250,32 @@ describe("NumberInput", () => {
       expect(onChange).toHaveBeenCalledWith(106);
     });
   });
+
+  describe("invalid input handling", () => {
+    it("should ignore non-numeric input while typing", async () => {
+      const onChange = jest.fn();
+      render(<NumberInput {...defaultProps} onChange={onChange} />);
+      const input = screen.getByTestId<HTMLInputElement>("test-input");
+
+      await userEvent.clear(input);
+      await userEvent.type(input, "1500abc");
+
+      expect(input).toHaveDisplayValue("1500");
+      expect(input).toHaveValue(1500);
+      expect(onChange).not.toHaveBeenCalled();
+    });
+
+    it("should allow numeric input with decimal point and minus sign", async () => {
+      const onChange = jest.fn();
+      render(<NumberInput {...defaultProps} onChange={onChange} />);
+      const input = screen.getByTestId<HTMLInputElement>("test-input");
+
+      await userEvent.clear(input);
+      await userEvent.type(input, "-123.45abc");
+
+      expect(input).toHaveDisplayValue("-123.45");
+      expect(input).toHaveValue(-123.45);
+      expect(onChange).not.toHaveBeenCalled();
+    });
+  });
 });
