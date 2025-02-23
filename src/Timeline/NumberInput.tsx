@@ -25,19 +25,20 @@ export const NumberInput = ({
     setDisplayedValue(String(value));
   }, [value]);
 
-  const confirmValue = useCallback(() => {
-    onChange(Number(displayedValue));
-  }, [displayedValue, onChange]);
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const newValue = e.target.value;
+      setDisplayedValue(newValue);
 
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setDisplayedValue(e.target.value);
-
-    // When using step buttons and arrow keys, nativeEvent won't have inputType property
-    // Other input methods (direct input, copy-paste) will have inputType
-    if (!("inputType" in e.nativeEvent)) {
-      inputRef.current?.select();
-    }
-  }, []);
+      // Detect if the input is caused by native step buttons
+      // Note: nativeEvent won't have inputType property when using native step buttons.
+      if (!("inputType" in e.nativeEvent)) {
+        onChange(Number(newValue));
+        inputRef.current?.select();
+      }
+    },
+    [onChange],
+  );
 
   const handleFocus = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
     e.target.select();
@@ -45,33 +46,34 @@ export const NumberInput = ({
 
   const handleBlur = useCallback(() => {
     if (!isEscaping.current) {
-      confirmValue();
+      onChange(Number(displayedValue));
     }
-
     isEscaping.current = false;
-  }, [confirmValue]);
+  }, [displayedValue, onChange]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       const { key } = e;
 
       if (key === "Enter") {
-        confirmValue();
+        onChange(Number(displayedValue));
         inputRef.current?.blur();
       } else if (key === "Escape") {
-        isEscaping.current = true;
+        isEscaping.current = true; // Prevent calling onChange in handleBlur
         setDisplayedValue(String(value));
         inputRef.current?.blur();
       } else if (key === "ArrowUp" || key === "ArrowDown") {
-        const isIncrement = key === "ArrowUp";
-        const stepSize = step ?? 1;
-        const adjustedStep = isIncrement ? stepSize : -stepSize;
-        const newValue = Number(displayedValue) + adjustedStep;
+        e.preventDefault();
 
-        onChange(Number(newValue));
+        const stepValue = step ?? 1;
+        const newValue =
+          Number(displayedValue) + (key === "ArrowUp" ? stepValue : -stepValue);
+
+        setDisplayedValue(String(newValue));
+        onChange(newValue);
       }
     },
-    [confirmValue, displayedValue, onChange, step, value],
+    [displayedValue, onChange, step, value],
   );
 
   return (
