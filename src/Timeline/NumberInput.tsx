@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { removeLeadingZeros } from "../utils/strings";
 
 type NumberInputProps = {
   value: number;
@@ -25,6 +26,14 @@ export const NumberInput = ({
     setDisplayedValue(String(value));
   }, [value]);
 
+  const onCommit = useCallback(
+    (value: string) => {
+      const cleanedValue = removeLeadingZeros(value);
+      onChange(Number(cleanedValue));
+    },
+    [onChange],
+  );
+
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const newValue = e.target.value;
@@ -33,11 +42,11 @@ export const NumberInput = ({
       // Detect if the input is caused by native step buttons
       // Note: nativeEvent won't have inputType property when using native step buttons.
       if (!("inputType" in e.nativeEvent)) {
-        onChange(Number(newValue));
+        onCommit(newValue);
         inputRef.current?.select();
       }
     },
-    [onChange],
+    [onCommit],
   );
 
   const handleFocus = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
@@ -46,17 +55,17 @@ export const NumberInput = ({
 
   const handleBlur = useCallback(() => {
     if (!isEscaping.current) {
-      onChange(Number(displayedValue));
+      onCommit(displayedValue);
     }
     isEscaping.current = false;
-  }, [displayedValue, onChange]);
+  }, [displayedValue, onCommit]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       const { key } = e;
 
       if (key === "Enter") {
-        onChange(Number(displayedValue));
+        onCommit(displayedValue);
         inputRef.current?.blur();
       } else if (key === "Escape") {
         isEscaping.current = true; // Prevent calling onChange in handleBlur
@@ -66,14 +75,15 @@ export const NumberInput = ({
         e.preventDefault();
 
         const stepValue = step ?? 1;
-        const newValue =
-          Number(displayedValue) + (key === "ArrowUp" ? stepValue : -stepValue);
+        const newValue = String(
+          Number(displayedValue) + (key === "ArrowUp" ? stepValue : -stepValue),
+        );
 
-        setDisplayedValue(String(newValue));
-        onChange(newValue);
+        setDisplayedValue(newValue);
+        onCommit(newValue);
       }
     },
-    [displayedValue, onChange, step, value],
+    [displayedValue, onCommit, step, value],
   );
 
   return (

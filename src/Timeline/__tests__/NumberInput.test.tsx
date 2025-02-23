@@ -18,14 +18,14 @@ describe("NumberInput", () => {
 
   it("displays the initial value", () => {
     render(<NumberInput {...defaultProps} />);
-    const input = screen.getByTestId("test-input");
+    const input = screen.getByTestId<HTMLInputElement>("test-input");
 
     expect(input).toHaveValue(2000);
   });
 
   it("updates displayed value while typing without triggering onChange", async () => {
     render(<NumberInput {...defaultProps} />);
-    const input = screen.getByTestId("test-input");
+    const input = screen.getByTestId<HTMLInputElement>("test-input");
 
     await userEvent.clear(input);
     await userEvent.type(input, "1500");
@@ -36,7 +36,7 @@ describe("NumberInput", () => {
 
   it("immediately changes value and removes focus when clicking outside the input field", async () => {
     render(<NumberInput {...defaultProps} />);
-    const input = screen.getByTestId("test-input");
+    const input = screen.getByTestId<HTMLInputElement>("test-input");
 
     await userEvent.clear(input);
     await userEvent.type(input, "1500");
@@ -49,7 +49,7 @@ describe("NumberInput", () => {
 
   it("immediately changes value when clicking the native step buttons", () => {
     render(<NumberInput {...defaultProps} />);
-    const input = screen.getByTestId("test-input");
+    const input = screen.getByTestId<HTMLInputElement>("test-input");
 
     // Simulate clicking the native step buttons
     fireEvent.change(input, {
@@ -148,5 +148,54 @@ describe("NumberInput", () => {
 
     expect(input).toHaveValue(2000);
     expect(defaultProps.onChange).not.toHaveBeenCalled();
+  });
+
+  describe("leading zero handling", () => {
+    it("should preserve leading zeros while typing", async () => {
+      const onChange = jest.fn();
+      render(<NumberInput {...defaultProps} onChange={onChange} />);
+      const input = screen.getByTestId<HTMLInputElement>("test-input");
+
+      await userEvent.clear(input);
+      await userEvent.type(input, "0123");
+
+      expect(onChange).not.toHaveBeenCalled();
+    });
+
+    it("should remove leading zeros when losing focus", async () => {
+      const onChange = jest.fn();
+      render(<NumberInput {...defaultProps} onChange={onChange} />);
+      const input = screen.getByTestId<HTMLInputElement>("test-input");
+
+      await userEvent.clear(input);
+      await userEvent.type(input, "0123");
+      await userEvent.click(document.body);
+
+      expect(onChange).toHaveBeenCalledWith(123);
+    });
+
+    it("should remove leading zeros when using the arrow keys", async () => {
+      const onChange = jest.fn();
+      render(<NumberInput {...defaultProps} onChange={onChange} />);
+      const input = screen.getByTestId<HTMLInputElement>("test-input");
+
+      await userEvent.clear(input);
+      await userEvent.type(input, "0123");
+      await userEvent.keyboard("{ArrowUp}");
+
+      expect(onChange).toHaveBeenCalledWith(123 + (defaultProps.step ?? 1));
+    });
+
+    it("should remove leading zeros when pressing Enter", async () => {
+      const onChange = jest.fn();
+      render(<NumberInput {...defaultProps} onChange={onChange} />);
+      const input = screen.getByTestId<HTMLInputElement>("test-input");
+
+      await userEvent.clear(input);
+      await userEvent.type(input, "0123");
+      await userEvent.keyboard("{Enter}");
+
+      expect(onChange).toHaveBeenCalledWith(123);
+    });
   });
 });
