@@ -3,9 +3,7 @@ export const TrackList = () => {
 
   return (
     <div
-      className="grid grid-flow-row auto-rows-[40px]
-      border-r border-solid border-r-gray-700 
-      overflow-auto"
+      className="grid grid-flow-row auto-rows-[40px] overflow-auto border-r border-solid border-r-gray-700"
       data-testid="track-list"
     >
       <div className="p-2">

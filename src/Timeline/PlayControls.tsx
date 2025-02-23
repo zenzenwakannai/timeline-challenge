@@ -17,14 +17,13 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
 
   return (
     <div
-      className="flex items-center justify-between border-b border-r border-solid border-gray-700 
- px-2"
+      className="flex items-center justify-between border-b border-r border-solid border-gray-700 px-2"
       data-testid="play-controls"
     >
       <fieldset className="flex gap-1">
         Current
         <input
-          className="bg-gray-700 px-1 rounded"
+          className="rounded bg-gray-700 px-1"
           type="number"
           data-testid="current-time-input"
           min={0}
@@ -37,7 +36,7 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
       -
       <fieldset className="flex gap-1">
         <input
-          className="bg-gray-700 px-1 rounded"
+          className="rounded bg-gray-700 px-1"
           type="number"
           data-testid="duration-input"
           min={100}
