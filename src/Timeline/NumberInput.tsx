@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useCallback, useState } from "react";
 
 type NumberInputProps = {
   value: number;
@@ -17,17 +17,18 @@ export const NumberInput = ({
   step,
   "data-testid": dataTestId,
 }: NumberInputProps) => {
-  const [displayedValue, setDisplayedValue] = useState(value);
+  const [displayedValue, setDisplayedValue] = useState(String(value));
+
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setDisplayedValue(e.target.value);
+  }, []);
 
   return (
     <input
       className="rounded bg-gray-700 px-1"
       type="number"
       value={displayedValue}
-      onChange={(e) => {
-        // @todo
-        setDisplayedValue(Number(e.target.value));
-      }}
+      onChange={handleChange}
       min={min}
       max={max}
       step={step}
