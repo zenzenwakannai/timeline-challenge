@@ -1,15 +1,20 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { NumberInput } from "./NumberInput";
 import { MAX_DURATION, MIN_DURATION, MIN_TIME } from "../constants";
 
 type PlayControlsProps = {
   time: number;
   setTime: (time: number) => void;
+  duration: number;
+  setDuration: (duration: number) => void;
 };
 
-export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
-  const [duration, setDuration] = useState(2000);
-
+export const PlayControls = ({
+  time,
+  setTime,
+  duration,
+  setDuration,
+}: PlayControlsProps) => {
   useEffect(() => {
     if (time < MIN_TIME) {
       setTime(MIN_TIME);
