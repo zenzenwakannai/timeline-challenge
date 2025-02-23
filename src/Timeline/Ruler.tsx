@@ -1,81 +1,110 @@
-import { useCallback, useRef, useState, useEffect } from "react";
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import { roundToTen } from "../utils/numbers";
 
-type RulerProps = {
+export type RulerProps = {
   setTime: (time: number) => void;
   duration: number;
+  onScroll: (e: React.UIEvent) => void;
 };
 
-export const Ruler = ({ setTime, duration }: RulerProps) => {
-  const [isDragging, setIsDragging] = useState(false);
-  const rulerBarRef = useRef<HTMLDivElement>(null);
+export type RulerHandle = {
+  setScrollLeft: (scrollLeft: number) => void;
+};
 
-  const calculateTimeFromMousePosition = useCallback((clientX: number) => {
-    if (!rulerBarRef.current) {
-      return 0;
-    }
+export const Ruler = forwardRef<RulerHandle, RulerProps>(
+  ({ setTime, duration, onScroll }, ref) => {
+    const rulerRef = useRef<HTMLDivElement>(null);
+    const rulerBarRef = useRef<HTMLDivElement>(null);
+    const [isDragging, setIsDragging] = useState(false);
 
-    const rect = rulerBarRef.current.getBoundingClientRect();
-    const scrollLeft = rulerBarRef.current.scrollLeft;
-    const relativeX = clientX - rect.left + scrollLeft;
+    const calculateTimeFromMousePosition = useCallback((clientX: number) => {
+      if (!rulerBarRef.current) {
+        return 0;
+      }
 
-    return roundToTen(relativeX);
-  }, []);
+      const rect = rulerBarRef.current.getBoundingClientRect();
+      const scrollLeft = rulerBarRef.current.scrollLeft;
+      const relativeX = clientX - rect.left + scrollLeft;
 
-  const handleMouseDown = useCallback(
-    (e: React.MouseEvent) => {
-      setIsDragging(true);
+      return roundToTen(relativeX);
+    }, []);
 
-      const newTime = calculateTimeFromMousePosition(e.clientX);
-      setTime(newTime);
-    },
-    [calculateTimeFromMousePosition, setTime],
-  );
+    const handleMouseDown = useCallback(
+      (e: React.MouseEvent) => {
+        setIsDragging(true);
 
-  const handleMouseMove = useCallback(
-    (e: MouseEvent) => {
+        const newTime = calculateTimeFromMousePosition(e.clientX);
+        setTime(newTime);
+      },
+      [calculateTimeFromMousePosition, setTime],
+    );
+
+    const handleMouseMove = useCallback(
+      (e: MouseEvent) => {
+        if (!isDragging) {
+          return;
+        }
+
+        const newTime = calculateTimeFromMousePosition(e.clientX);
+        setTime(newTime);
+      },
+      [calculateTimeFromMousePosition, isDragging, setTime],
+    );
+
+    const handleMouseUp = useCallback(() => {
       if (!isDragging) {
         return;
       }
 
-      const newTime = calculateTimeFromMousePosition(e.clientX);
-      setTime(newTime);
-    },
-    [calculateTimeFromMousePosition, isDragging, setTime],
-  );
+      setIsDragging(false);
+    }, [isDragging]);
 
-  const handleMouseUp = useCallback(() => {
-    if (!isDragging) {
-      return;
-    }
+    useEffect(() => {
+      if (isDragging) {
+        window.addEventListener("mousemove", handleMouseMove);
+        window.addEventListener("mouseup", handleMouseUp);
+      }
 
-    setIsDragging(false);
-  }, [isDragging]);
+      return () => {
+        window.removeEventListener("mousemove", handleMouseMove);
+        window.removeEventListener("mouseup", handleMouseUp);
+      };
+    }, [isDragging, handleMouseMove, handleMouseUp]);
 
-  useEffect(() => {
-    if (isDragging) {
-      window.addEventListener("mousemove", handleMouseMove);
-      window.addEventListener("mouseup", handleMouseUp);
-    }
+    useImperativeHandle(ref, () => ({
+      setScrollLeft: (scrollLeft: number) => {
+        if (!rulerRef.current) {
+          return;
+        }
 
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
-    };
-  }, [isDragging, handleMouseMove, handleMouseUp]);
+        rulerRef.current.scrollLeft = scrollLeft;
+      },
+    }));
 
-  return (
-    <div
-      className="min-w-0 overflow-x-auto overflow-y-hidden border-b border-solid border-gray-700 px-4 py-2"
-      data-testid="ruler"
-    >
+    return (
       <div
-        ref={rulerBarRef}
-        className="h-6 rounded-md bg-white/25"
-        style={{ width: `${duration}px` }}
-        onMouseDown={handleMouseDown}
-        data-testid="ruler-bar"
-      ></div>
-    </div>
-  );
-};
+        ref={rulerRef}
+        className="min-w-0 overflow-x-auto overflow-y-hidden border-b border-solid border-gray-700 px-4 py-2"
+        onScroll={onScroll}
+        data-testid="ruler"
+      >
+        <div
+          ref={rulerBarRef}
+          className="h-6 rounded-md bg-white/25"
+          style={{ width: `${duration}px` }}
+          onMouseDown={handleMouseDown}
+          data-testid="ruler-bar"
+        ></div>
+      </div>
+    );
+  },
+);
+
+Ruler.displayName = "Ruler";

@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useLayoutEffect } from "react";
 import { NumberInput } from "./NumberInput";
 import { MAX_DURATION, MIN_DURATION, MIN_TIME } from "../constants";
 
@@ -15,7 +15,7 @@ export const PlayControls = ({
   duration,
   setDuration,
 }: PlayControlsProps) => {
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (time < MIN_TIME) {
       setTime(MIN_TIME);
     } else if (time > duration) {

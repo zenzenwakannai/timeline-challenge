@@ -1,14 +1,46 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Playhead } from "./Playhead";
-import { Ruler } from "./Ruler";
+import { Ruler, RulerHandle } from "./Ruler";
 import { TrackList } from "./TrackList";
-import { KeyframeList } from "./KeyframeList";
+import { KeyframeList, KeyframeListHandle } from "./KeyframeList";
 import { PlayControls } from "./PlayControls";
 
 export const Timeline = () => {
   // FIXME: performance concerned
   const [time, setTime] = useState(0);
   const [duration, setDuration] = useState(2000);
+
+  const rulerRef = useRef<RulerHandle>(null);
+  const keyframeListRef = useRef<KeyframeListHandle>(null);
+  const isScrolling = useRef(false);
+
+  const handleRulerScroll = (e: React.UIEvent) => {
+    if (isScrolling.current) {
+      return;
+    }
+
+    isScrolling.current = true;
+    const scrollLeft = e.currentTarget.scrollLeft;
+    keyframeListRef.current?.setScrollLeft(scrollLeft);
+    
+    requestAnimationFrame(() => {
+      isScrolling.current = false;
+    });
+  };
+
+  const handleKeyframeListScroll = (e: React.UIEvent) => {
+    if (isScrolling.current) {
+      return;
+    }
+
+    isScrolling.current = true;
+    const scrollLeft = e.currentTarget.scrollLeft;
+    rulerRef.current?.setScrollLeft(scrollLeft);
+    
+    requestAnimationFrame(() => {
+      isScrolling.current = false;
+    });
+  };
 
   return (
     <div
@@ -21,9 +53,17 @@ export const Timeline = () => {
         duration={duration}
         setDuration={setDuration}
       />
-      <Ruler setTime={setTime} duration={duration} />
+      <Ruler
+        ref={rulerRef}
+        setTime={setTime}
+        duration={duration}
+        onScroll={handleRulerScroll}
+      />
       <TrackList />
-      <KeyframeList />
+      <KeyframeList
+        ref={keyframeListRef}
+        onScroll={handleKeyframeListScroll}
+      />
       <Playhead time={time} />
     </div>
   );
