@@ -9,6 +9,7 @@ export const Timeline = () => {
   // FIXME: performance concerned
   const [time, setTime] = useState(0);
   const [duration, setDuration] = useState(2000);
+  const [scrollLeft, setScrollLeft] = useState(0);
 
   const rulerRef = useRef<RulerHandle>(null);
   const trackListRef = useRef<TrackListHandle>(null);
@@ -21,8 +22,9 @@ export const Timeline = () => {
     }
 
     isScrolling.current = true;
-    const { scrollLeft } = e.currentTarget;
-    keyframeListRef.current?.setScrollLeft(scrollLeft);
+    const { scrollLeft: newScrollLeft } = e.currentTarget;
+    keyframeListRef.current?.setScrollLeft(newScrollLeft);
+    setScrollLeft(newScrollLeft);
 
     requestAnimationFrame(() => {
       isScrolling.current = false;
@@ -49,9 +51,10 @@ export const Timeline = () => {
     }
 
     isScrolling.current = true;
-    const { scrollLeft, scrollTop } = e.currentTarget;
-    rulerRef.current?.setScrollLeft(scrollLeft);
+    const { scrollLeft: newScrollLeft, scrollTop } = e.currentTarget;
+    rulerRef.current?.setScrollLeft(newScrollLeft);
     trackListRef.current?.setScrollTop(scrollTop);
+    setScrollLeft(newScrollLeft);
 
     requestAnimationFrame(() => {
       isScrolling.current = false;
@@ -60,7 +63,7 @@ export const Timeline = () => {
 
   return (
     <div
-      className="relative grid h-[300px] w-full grid-cols-[300px_1fr] grid-rows-[40px_1fr] border-t-2 border-solid border-gray-700 bg-gray-800"
+      className="relative z-0 grid h-[300px] w-full grid-cols-[300px_1fr] grid-rows-[40px_1fr] border-t-2 border-solid border-gray-700 bg-gray-800"
       data-testid="timeline"
     >
       <PlayControls
@@ -81,7 +84,7 @@ export const Timeline = () => {
         duration={duration}
         onScroll={handleKeyframeListScroll}
       />
-      <Playhead time={time} />
+      <Playhead time={time} scrollLeft={scrollLeft} />
     </div>
   );
 };

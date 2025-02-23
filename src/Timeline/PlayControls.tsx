@@ -39,7 +39,7 @@ export const PlayControls = ({
 
   return (
     <div
-      className="flex select-none items-center justify-between border-b border-r border-solid border-gray-700 px-2"
+      className="relative z-20 flex select-none items-center justify-between border-b border-r border-solid border-gray-700 bg-gray-800 px-2"
       data-testid="play-controls"
     >
       <fieldset className="flex gap-1">
