@@ -76,7 +76,11 @@ export const Timeline = () => {
         onScroll={handleRulerScroll}
       />
       <TrackList ref={trackListRef} onScroll={handleTrackListScroll} />
-      <KeyframeList ref={keyframeListRef} onScroll={handleKeyframeListScroll} />
+      <KeyframeList
+        ref={keyframeListRef}
+        duration={duration}
+        onScroll={handleKeyframeListScroll}
+      />
       <Playhead time={time} />
     </div>
   );
