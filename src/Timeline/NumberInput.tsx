@@ -1,4 +1,11 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import classNames from "classnames";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { removeLeadingZeros } from "../utils/strings";
 
 type NumberInputProps = {
@@ -25,6 +32,16 @@ export const NumberInput = ({
   useEffect(() => {
     setDisplayedValue(String(value));
   }, [value]);
+
+  const isInvalid = useMemo(() => {
+    const numericValue = Number(displayedValue);
+
+    return (
+      (min !== undefined && numericValue < min) ||
+      (max !== undefined && numericValue > max) ||
+      numericValue !== parseInt(displayedValue)
+    );
+  }, [displayedValue, max, min]);
 
   const onCommit = useCallback(
     (valueToCommit: string) => {
@@ -106,7 +123,9 @@ export const NumberInput = ({
   return (
     <input
       ref={inputRef}
-      className="rounded bg-gray-700 px-1"
+      className={classNames("rounded bg-gray-700 px-1", {
+        "text-red-500": isInvalid,
+      })}
       type="number"
       value={displayedValue}
       onChange={handleChange}
