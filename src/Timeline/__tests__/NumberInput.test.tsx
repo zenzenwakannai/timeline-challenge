@@ -12,8 +12,8 @@ describe("NumberInput", () => {
     "data-testid": "test-input",
   };
 
-  beforeEach(() => {
-    jest.clearAllMocks();
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   it("displays the initial value", () => {
@@ -62,5 +62,15 @@ describe("NumberInput", () => {
     fireEvent.keyDown(input, { key: "ArrowDown", code: "ArrowDown" });
 
     expect(defaultProps.onChange).toHaveBeenCalledWith(1990);
+  });
+
+  it("selects entire text when the input gains focus", async () => {
+    render(<NumberInput {...defaultProps} />);
+    const input = screen.getByTestId<HTMLInputElement>("test-input");
+    const selectSpy = jest.spyOn(input, "select");
+
+    fireEvent.focus(input);
+
+    expect(selectSpy).toHaveBeenCalled();
   });
 });

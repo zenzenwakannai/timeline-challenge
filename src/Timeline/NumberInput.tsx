@@ -31,6 +31,10 @@ export const NumberInput = ({
     setDisplayedValue(e.target.value);
   }, []);
 
+  const handleFocus = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
+    e.target.select();
+  }, []);
+
   const handleBlur = useCallback(() => {
     confirmValue();
   }, [confirmValue]);
@@ -57,6 +61,7 @@ export const NumberInput = ({
       type="number"
       value={displayedValue}
       onChange={handleChange}
+      onFocus={handleFocus}
       onBlur={handleBlur}
       onKeyDown={handleKeyDown}
       min={min}
