@@ -11,7 +11,7 @@ type NumberInputProps = {
 
 export const NumberInput = ({
   value,
-  // onChange,
+  onChange,
   min,
   max,
   step,
@@ -19,9 +19,17 @@ export const NumberInput = ({
 }: NumberInputProps) => {
   const [displayedValue, setDisplayedValue] = useState(String(value));
 
+  const confirmValue = useCallback(() => {
+    onChange(Number(displayedValue));
+  }, [displayedValue, onChange]);
+
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setDisplayedValue(e.target.value);
   }, []);
+
+  const handleBlur = useCallback(() => {
+    confirmValue();
+  }, [confirmValue]);
 
   return (
     <input
@@ -29,6 +37,7 @@ export const NumberInput = ({
       type="number"
       value={displayedValue}
       onChange={handleChange}
+      onBlur={handleBlur}
       min={min}
       max={max}
       step={step}

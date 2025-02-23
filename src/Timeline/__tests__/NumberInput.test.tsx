@@ -18,7 +18,9 @@ describe("NumberInput", () => {
 
   it("displays the initial value", () => {
     render(<NumberInput {...defaultProps} />);
-    expect(screen.getByTestId("test-input")).toHaveValue(2000);
+    const input = screen.getByTestId("test-input");
+
+    expect(input).toHaveValue(2000);
   });
 
   it("updates displayed value while typing without triggering onChange", async () => {
@@ -30,5 +32,16 @@ describe("NumberInput", () => {
 
     expect(input).toHaveValue(1500);
     expect(defaultProps.onChange).not.toHaveBeenCalled();
+  });
+
+  it("confirms value on blur and calls onChange if value changed", async () => {
+    render(<NumberInput {...defaultProps} />);
+    const input = screen.getByTestId("test-input");
+
+    await userEvent.clear(input);
+    await userEvent.type(input, "1500");
+    input.blur();
+
+    expect(defaultProps.onChange).toHaveBeenCalledWith(1500);
   });
 });
