@@ -236,4 +236,18 @@ describe("NumberInput", () => {
       expect(onChange).toHaveBeenCalledWith(defaultProps.min);
     });
   });
+
+  describe("decimal value handling", () => {
+    it("should round decimal values to nearest integer when committing", async () => {
+      const onChange = jest.fn();
+      render(<NumberInput {...defaultProps} onChange={onChange} />);
+      const input = screen.getByTestId<HTMLInputElement>("test-input");
+
+      await userEvent.clear(input);
+      await userEvent.type(input, "105.5");
+      await userEvent.keyboard("{Enter}");
+
+      expect(onChange).toHaveBeenCalledWith(106);
+    });
+  });
 });

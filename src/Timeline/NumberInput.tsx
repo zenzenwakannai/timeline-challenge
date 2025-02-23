@@ -29,7 +29,7 @@ export const NumberInput = ({
   const onCommit = useCallback(
     (valueToCommit: string) => {
       const valueWithoutLeadingZeros = removeLeadingZeros(valueToCommit);
-      const numericValue = Number(valueWithoutLeadingZeros);
+      const numericValue = Math.round(Number(valueWithoutLeadingZeros));
 
       let adjustedValue;
       if (min !== undefined && numericValue < min) {
@@ -91,8 +91,6 @@ export const NumberInput = ({
         setDisplayedValue(String(value));
         inputRef.current?.blur();
       } else if (key === "ArrowUp" || key === "ArrowDown") {
-        e.preventDefault();
-
         const stepValue = step ?? 1;
         const newValue = String(
           Number(displayedValue) + (key === "ArrowUp" ? stepValue : -stepValue),
