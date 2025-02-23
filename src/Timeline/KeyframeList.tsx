@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle, useRef } from "react";
+import { forwardRef, useCallback, useImperativeHandle, useRef } from "react";
 import { Segment } from "./Segment";
 
 export type KeyframeListProps = {
@@ -7,23 +7,37 @@ export type KeyframeListProps = {
 
 export type KeyframeListHandle = {
   setScrollLeft: (scrollLeft: number) => void;
+  setScrollTop: (scrollTop: number) => void;
 };
 
 export const KeyframeList = forwardRef<KeyframeListHandle, KeyframeListProps>(
   ({ onScroll }, ref) => {
-    // TODO: implement scroll sync with `Ruler` and `TrackList`
-
     const keyframeListRef = useRef<HTMLDivElement>(null);
 
-    useImperativeHandle(ref, () => ({
-      setScrollLeft: (scrollLeft: number) => {
-        if (!keyframeListRef.current) {
-          return;
-        }
+    const setScrollLeft = useCallback((scrollLeft: number) => {
+      if (!keyframeListRef.current) {
+        return;
+      }
 
-        keyframeListRef.current.scrollLeft = scrollLeft;
-      },
-    }));
+      keyframeListRef.current.scrollLeft = scrollLeft;
+    }, []);
+
+    const setScrollTop = useCallback((scrollTop: number) => {
+      if (!keyframeListRef.current) {
+        return;
+      }
+
+      keyframeListRef.current.scrollTop = scrollTop;
+    }, []);
+
+    useImperativeHandle(
+      ref,
+      () => ({
+        setScrollLeft,
+        setScrollTop,
+      }),
+      [setScrollLeft, setScrollTop],
+    );
 
     return (
       <div

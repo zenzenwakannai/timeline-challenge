@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { Playhead } from "./Playhead";
 import { Ruler, RulerHandle } from "./Ruler";
-import { TrackList } from "./TrackList";
+import { TrackList, TrackListHandle } from "./TrackList";
 import { KeyframeList, KeyframeListHandle } from "./KeyframeList";
 import { PlayControls } from "./PlayControls";
 
@@ -11,6 +11,7 @@ export const Timeline = () => {
   const [duration, setDuration] = useState(2000);
 
   const rulerRef = useRef<RulerHandle>(null);
+  const trackListRef = useRef<TrackListHandle>(null);
   const keyframeListRef = useRef<KeyframeListHandle>(null);
   const isScrolling = useRef(false);
 
@@ -20,9 +21,23 @@ export const Timeline = () => {
     }
 
     isScrolling.current = true;
-    const scrollLeft = e.currentTarget.scrollLeft;
+    const { scrollLeft } = e.currentTarget;
     keyframeListRef.current?.setScrollLeft(scrollLeft);
-    
+
+    requestAnimationFrame(() => {
+      isScrolling.current = false;
+    });
+  };
+
+  const handleTrackListScroll = (e: React.UIEvent) => {
+    if (isScrolling.current) {
+      return;
+    }
+
+    isScrolling.current = true;
+    const { scrollTop } = e.currentTarget;
+    keyframeListRef.current?.setScrollTop(scrollTop);
+
     requestAnimationFrame(() => {
       isScrolling.current = false;
     });
@@ -34,9 +49,10 @@ export const Timeline = () => {
     }
 
     isScrolling.current = true;
-    const scrollLeft = e.currentTarget.scrollLeft;
+    const { scrollLeft, scrollTop } = e.currentTarget;
     rulerRef.current?.setScrollLeft(scrollLeft);
-    
+    trackListRef.current?.setScrollTop(scrollTop);
+
     requestAnimationFrame(() => {
       isScrolling.current = false;
     });
@@ -59,11 +75,8 @@ export const Timeline = () => {
         duration={duration}
         onScroll={handleRulerScroll}
       />
-      <TrackList />
-      <KeyframeList
-        ref={keyframeListRef}
-        onScroll={handleKeyframeListScroll}
-      />
+      <TrackList ref={trackListRef} onScroll={handleTrackListScroll} />
+      <KeyframeList ref={keyframeListRef} onScroll={handleKeyframeListScroll} />
       <Playhead time={time} />
     </div>
   );

@@ -78,15 +78,21 @@ export const Ruler = forwardRef<RulerHandle, RulerProps>(
       };
     }, [isDragging, handleMouseMove, handleMouseUp]);
 
-    useImperativeHandle(ref, () => ({
-      setScrollLeft: (scrollLeft: number) => {
-        if (!rulerRef.current) {
-          return;
-        }
+    const setScrollLeft = useCallback((scrollLeft: number) => {
+      if (!rulerRef.current) {
+        return;
+      }
 
-        rulerRef.current.scrollLeft = scrollLeft;
-      },
-    }));
+      rulerRef.current.scrollLeft = scrollLeft;
+    }, []);
+
+    useImperativeHandle(
+      ref,
+      () => ({
+        setScrollLeft,
+      }),
+      [setScrollLeft],
+    );
 
     return (
       <div
