@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { NumberInput } from "../NumberInput";
 
@@ -43,5 +43,15 @@ describe("NumberInput", () => {
     input.blur();
 
     expect(defaultProps.onChange).toHaveBeenCalledWith(1500);
+  });
+
+  it("confirms value on spinner click", () => {
+    render(<NumberInput {...defaultProps} />);
+    const input = screen.getByTestId("test-input");
+
+    fireEvent.change(input, { target: { value: "1990" } });
+    fireEvent.blur(input);
+
+    expect(defaultProps.onChange).toHaveBeenCalledWith(1990);
   });
 });
