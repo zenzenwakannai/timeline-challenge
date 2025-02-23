@@ -62,14 +62,14 @@ describe("NumberInput", () => {
   });
 
   it("immediately changes value when pressing the up arrow key", async () => {
-    render(<NumberInput {...defaultProps} />);
+    render(<NumberInput {...defaultProps} value={1990} />);
     const input = screen.getByTestId<HTMLInputElement>("test-input");
 
     await userEvent.click(input);
     await userEvent.keyboard("{ArrowUp}");
 
-    expect(input).toHaveValue(2010);
-    expect(defaultProps.onChange).toHaveBeenCalledWith(2010);
+    expect(input).toHaveValue(2000);
+    expect(defaultProps.onChange).toHaveBeenCalledWith(2000);
   });
 
   it("immediately changes value when pressing the down arrow key", async () => {
@@ -196,6 +196,44 @@ describe("NumberInput", () => {
       await userEvent.keyboard("{Enter}");
 
       expect(onChange).toHaveBeenCalledWith(123);
+    });
+  });
+
+  describe("negative value handling", () => {
+    it("should adjust negative values to minimum when min is specified", async () => {
+      const onChange = jest.fn();
+      render(<NumberInput {...defaultProps} onChange={onChange} />);
+      const input = screen.getByTestId<HTMLInputElement>("test-input");
+
+      await userEvent.clear(input);
+      await userEvent.type(input, "-123");
+      await userEvent.keyboard("{Enter}");
+
+      expect(onChange).toHaveBeenCalledWith(defaultProps.min);
+    });
+
+    it("should allow negative values when min is not specified", async () => {
+      const onChange = jest.fn();
+      const propsWithoutMin = { ...defaultProps, min: undefined };
+      render(<NumberInput {...propsWithoutMin} onChange={onChange} />);
+      const input = screen.getByTestId<HTMLInputElement>("test-input");
+
+      await userEvent.clear(input);
+      await userEvent.type(input, "-123");
+      await userEvent.keyboard("{Enter}");
+
+      expect(onChange).toHaveBeenCalledWith(-123);
+    });
+
+    it("should adjust negative values to minimum when using arrow keys", async () => {
+      const onChange = jest.fn();
+      render(<NumberInput {...defaultProps} onChange={onChange} value={1} />);
+      const input = screen.getByTestId<HTMLInputElement>("test-input");
+
+      await userEvent.click(input);
+      await userEvent.keyboard("{ArrowDown}");
+
+      expect(onChange).toHaveBeenCalledWith(defaultProps.min);
     });
   });
 });

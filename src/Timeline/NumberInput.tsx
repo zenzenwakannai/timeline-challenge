@@ -27,11 +27,26 @@ export const NumberInput = ({
   }, [value]);
 
   const onCommit = useCallback(
-    (value: string) => {
-      const cleanedValue = removeLeadingZeros(value);
-      onChange(Number(cleanedValue));
+    (valueToCommit: string) => {
+      const valueWithoutLeadingZeros = removeLeadingZeros(valueToCommit);
+      const numericValue = Number(valueWithoutLeadingZeros);
+
+      let adjustedValue;
+      if (min !== undefined && numericValue < min) {
+        adjustedValue = min;
+      } else if (max !== undefined && numericValue > max) {
+        adjustedValue = max;
+      } else {
+        adjustedValue = numericValue;
+      }
+
+      if (value !== adjustedValue) {
+        onChange(adjustedValue);
+      } else {
+        setDisplayedValue(String(adjustedValue));
+      }
     },
-    [onChange],
+    [min, max, value, onChange],
   );
 
   const handleChange = useCallback(
@@ -65,9 +80,13 @@ export const NumberInput = ({
       const { key } = e;
 
       if (key === "Enter") {
+        e.preventDefault();
+
         onCommit(displayedValue);
         inputRef.current?.blur();
       } else if (key === "Escape") {
+        e.preventDefault();
+
         isEscaping.current = true; // Prevent calling onChange in handleBlur
         setDisplayedValue(String(value));
         inputRef.current?.blur();
