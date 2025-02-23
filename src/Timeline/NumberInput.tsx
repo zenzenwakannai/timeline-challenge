@@ -50,7 +50,10 @@ export const NumberInput = ({
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       const { key } = e;
 
-      if (key === "ArrowUp" || key === "ArrowDown") {
+      if (key === "Enter") {
+        confirmValue();
+        inputRef.current?.blur();
+      } else if (key === "ArrowUp" || key === "ArrowDown") {
         const isIncrement = key === "ArrowUp";
         const stepSize = step ?? 1;
         const adjustedStep = isIncrement ? stepSize : -stepSize;
@@ -59,7 +62,7 @@ export const NumberInput = ({
         onChange(Number(newValue));
       }
     },
-    [displayedValue, onChange, step],
+    [confirmValue, displayedValue, onChange, step],
   );
 
   return (

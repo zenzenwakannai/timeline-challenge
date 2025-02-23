@@ -45,7 +45,7 @@ describe("NumberInput", () => {
     expect(defaultProps.onChange).toHaveBeenCalledWith(1500);
   });
 
-  it("confirms value on spinner click", () => {
+  it("confirms value on native step buttons", () => {
     render(<NumberInput {...defaultProps} />);
     const input = screen.getByTestId("test-input");
 
@@ -101,5 +101,17 @@ describe("NumberInput", () => {
     });
 
     expect(selectSpy).toHaveBeenCalled();
+  });
+
+  it("confirms value and removes focus when pressing Enter", () => {
+    render(<NumberInput {...defaultProps} />);
+    const input = screen.getByTestId<HTMLInputElement>("test-input");
+    const blurSpy = jest.spyOn(input, "blur");
+
+    fireEvent.change(input, { target: { value: "1500" } });
+    fireEvent.keyDown(input, { key: "Enter" });
+
+    expect(defaultProps.onChange).toHaveBeenCalledWith(1500);
+    expect(blurSpy).toHaveBeenCalled();
   });
 });
