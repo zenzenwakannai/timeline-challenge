@@ -40,7 +40,7 @@ describe("NumberInput", () => {
 
     await userEvent.clear(input);
     await userEvent.type(input, "1500");
-    input.blur();
+    fireEvent.blur(input);
 
     expect(defaultProps.onChange).toHaveBeenCalledWith(1500);
   });
@@ -112,6 +112,20 @@ describe("NumberInput", () => {
     fireEvent.keyDown(input, { key: "Enter" });
 
     expect(defaultProps.onChange).toHaveBeenCalledWith(1500);
+    expect(blurSpy).toHaveBeenCalled();
+  });
+
+  it("reverts to original value and removes focus when pressing Escape", () => {
+    render(<NumberInput {...defaultProps} />);
+    const input = screen.getByTestId<HTMLInputElement>("test-input");
+    const blurSpy = jest.spyOn(input, "blur");
+
+    fireEvent.change(input, { target: { value: "1500" } });
+    fireEvent.keyDown(input, { key: "Escape" });
+    fireEvent.blur(input); // Simulate the blur event that happens when .blur() is called
+
+    expect(input).toHaveValue(2000);
+    expect(defaultProps.onChange).not.toHaveBeenCalled();
     expect(blurSpy).toHaveBeenCalled();
   });
 });

@@ -19,6 +19,7 @@ export const NumberInput = ({
 }: NumberInputProps) => {
   const [displayedValue, setDisplayedValue] = useState(String(value));
   const inputRef = useRef<HTMLInputElement>(null);
+  const isEscaping = useRef(false);
 
   useEffect(() => {
     setDisplayedValue(String(value));
@@ -43,7 +44,11 @@ export const NumberInput = ({
   }, []);
 
   const handleBlur = useCallback(() => {
-    confirmValue();
+    if (!isEscaping.current) {
+      confirmValue();
+    }
+
+    isEscaping.current = false;
   }, [confirmValue]);
 
   const handleKeyDown = useCallback(
@@ -52,6 +57,10 @@ export const NumberInput = ({
 
       if (key === "Enter") {
         confirmValue();
+        inputRef.current?.blur();
+      } else if (key === "Escape") {
+        isEscaping.current = true;
+        setDisplayedValue(String(value));
         inputRef.current?.blur();
       } else if (key === "ArrowUp" || key === "ArrowDown") {
         const isIncrement = key === "ArrowUp";
@@ -62,7 +71,7 @@ export const NumberInput = ({
         onChange(Number(newValue));
       }
     },
-    [confirmValue, displayedValue, onChange, step],
+    [confirmValue, displayedValue, onChange, step, value],
   );
 
   return (
