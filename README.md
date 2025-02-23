@@ -103,7 +103,6 @@ https://github.com/user-attachments/assets/3940cd0d-dd9d-4331-9172-592462ad65d3
 
 ⚠️ **Warning**: Do not change any `data-testid` attribute names in the provided components. These are used for automated assessment of your assignment. Modifying these names may result in failing the assessment criteria.
 
-
 ## Submission
 
 - Share your code repository (GitHub or GitLab) containing the implemented solution
