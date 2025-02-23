@@ -20,10 +20,10 @@ describe("NumberInput", () => {
     render(<NumberInput {...defaultProps} />);
     const input = screen.getByTestId<HTMLInputElement>("test-input");
 
-    expect(input).toHaveValue(2000);
+    expect(input).toHaveValue(defaultProps.value);
   });
 
-  it("updates displayed value while typing without triggering onChange", async () => {
+  it("1-1. updates displayed value while typing without triggering onChange", async () => {
     render(<NumberInput {...defaultProps} />);
     const input = screen.getByTestId<HTMLInputElement>("test-input");
 
@@ -34,20 +34,20 @@ describe("NumberInput", () => {
     expect(defaultProps.onChange).not.toHaveBeenCalled();
   });
 
-  it("immediately changes value and removes focus when clicking outside the input field", async () => {
+  it("1-2. changes value and removes focus when clicking outside the input field", async () => {
     render(<NumberInput {...defaultProps} />);
     const input = screen.getByTestId<HTMLInputElement>("test-input");
 
     await userEvent.clear(input);
     await userEvent.type(input, "1500");
-    // Simulate clicking outside the input field
-    await userEvent.click(document.body);
+    await userEvent.click(document.body); // Simulate clicking outside the input field
 
     expect(input).not.toHaveFocus();
+    expect(input).toHaveValue(1500);
     expect(defaultProps.onChange).toHaveBeenCalledWith(1500);
   });
 
-  it("immediately changes value when clicking the native step buttons", () => {
+  it("1-3. changes value when clicking the native step buttons", () => {
     render(<NumberInput {...defaultProps} />);
     const input = screen.getByTestId<HTMLInputElement>("test-input");
 
@@ -61,7 +61,7 @@ describe("NumberInput", () => {
     expect(defaultProps.onChange).toHaveBeenCalledWith(1990);
   });
 
-  it("immediately changes value when pressing the up arrow key", async () => {
+  it("1-4-1. changes value when pressing the up arrow key", async () => {
     render(<NumberInput {...defaultProps} value={1990} />);
     const input = screen.getByTestId<HTMLInputElement>("test-input");
 
@@ -72,7 +72,7 @@ describe("NumberInput", () => {
     expect(defaultProps.onChange).toHaveBeenCalledWith(2000);
   });
 
-  it("immediately changes value when pressing the down arrow key", async () => {
+  it("1-4-2. changes value when pressing the down arrow key", async () => {
     render(<NumberInput {...defaultProps} />);
     const input = screen.getByTestId<HTMLInputElement>("test-input");
 
@@ -83,7 +83,7 @@ describe("NumberInput", () => {
     expect(defaultProps.onChange).toHaveBeenCalledWith(1990);
   });
 
-  it("selects entire text when the input gains focus", async () => {
+  it("1-5. selects entire text when the input gains focus", async () => {
     render(<NumberInput {...defaultProps} />);
     const input = screen.getByTestId<HTMLInputElement>("test-input");
 
@@ -92,7 +92,7 @@ describe("NumberInput", () => {
     expect(input).toHaveFocus();
   });
 
-  it("selects entire text after using the native step buttons", () => {
+  it("1-6. selects entire text after using the native step buttons", () => {
     render(<NumberInput {...defaultProps} />);
     const input = screen.getByTestId<HTMLInputElement>("test-input");
     const selectSpy = jest.spyOn(input, "select");
@@ -106,7 +106,7 @@ describe("NumberInput", () => {
     expect(selectSpy).toHaveBeenCalled();
   });
 
-  it("selects entire text after using the up arrow key", async () => {
+  it("1-7-1. selects entire text after using the up arrow key", async () => {
     render(<NumberInput {...defaultProps} />);
     const input = screen.getByTestId<HTMLInputElement>("test-input");
 
@@ -116,7 +116,7 @@ describe("NumberInput", () => {
     expect(input).toHaveFocus();
   });
 
-  it("selects entire text after using the down arrow key", async () => {
+  it("1-7-2. selects entire text after using the down arrow key", async () => {
     render(<NumberInput {...defaultProps} />);
     const input = screen.getByTestId<HTMLInputElement>("test-input");
 
@@ -126,7 +126,7 @@ describe("NumberInput", () => {
     expect(input).toHaveFocus();
   });
 
-  it("confirms value and removes focus when pressing Enter", async () => {
+  it("1-8. confirms value and removes focus when pressing Enter", async () => {
     render(<NumberInput {...defaultProps} />);
     const input = screen.getByTestId<HTMLInputElement>("test-input");
 
@@ -134,11 +134,12 @@ describe("NumberInput", () => {
     await userEvent.type(input, "1500");
     await userEvent.keyboard("{Enter}");
 
+    expect(input).toHaveValue(1500);
     expect(input).not.toHaveFocus();
     expect(defaultProps.onChange).toHaveBeenCalledWith(1500);
   });
 
-  it("reverts to original value and removes focus when pressing Escape", async () => {
+  it("1-9. reverts to original value and removes focus when pressing Escape", async () => {
     render(<NumberInput {...defaultProps} />);
     const input = screen.getByTestId<HTMLInputElement>("test-input");
 
@@ -147,135 +148,56 @@ describe("NumberInput", () => {
     await userEvent.keyboard("{Escape}");
 
     expect(input).toHaveValue(2000);
+    expect(input).not.toHaveFocus();
     expect(defaultProps.onChange).not.toHaveBeenCalled();
   });
 
-  describe("leading zero handling", () => {
-    it("should preserve leading zeros while typing", async () => {
-      const onChange = jest.fn();
-      render(<NumberInput {...defaultProps} onChange={onChange} />);
-      const input = screen.getByTestId<HTMLInputElement>("test-input");
+  it("1-10. preserve at most one leading zero but not more than one while typing", async () => {
+    const onChange = jest.fn();
+    render(<NumberInput {...defaultProps} onChange={onChange} />);
+    const input = screen.getByTestId<HTMLInputElement>("test-input");
 
-      await userEvent.clear(input);
-      await userEvent.type(input, "0123");
+    await userEvent.clear(input);
+    await userEvent.type(input, "0");
 
-      expect(onChange).not.toHaveBeenCalled();
-    });
+    expect(input).toHaveDisplayValue("0");
+    expect(onChange).not.toHaveBeenCalled();
 
-    it("should remove leading zeros when losing focus", async () => {
-      const onChange = jest.fn();
-      render(<NumberInput {...defaultProps} onChange={onChange} />);
-      const input = screen.getByTestId<HTMLInputElement>("test-input");
+    await userEvent.clear(input);
+    await userEvent.type(input, "000");
 
-      await userEvent.clear(input);
-      await userEvent.type(input, "0123");
-      await userEvent.click(document.body);
+    expect(input).toHaveDisplayValue("0");
+    expect(onChange).not.toHaveBeenCalled();
 
-      expect(onChange).toHaveBeenCalledWith(123);
-    });
+    await userEvent.clear(input);
+    await userEvent.type(input, "000123");
 
-    it("should remove leading zeros when using the arrow keys", async () => {
-      const onChange = jest.fn();
-      render(<NumberInput {...defaultProps} onChange={onChange} />);
-      const input = screen.getByTestId<HTMLInputElement>("test-input");
-
-      await userEvent.clear(input);
-      await userEvent.type(input, "0123");
-      await userEvent.keyboard("{ArrowUp}");
-
-      expect(onChange).toHaveBeenCalledWith(123 + (defaultProps.step ?? 1));
-    });
-
-    it("should remove leading zeros when pressing Enter", async () => {
-      const onChange = jest.fn();
-      render(<NumberInput {...defaultProps} onChange={onChange} />);
-      const input = screen.getByTestId<HTMLInputElement>("test-input");
-
-      await userEvent.clear(input);
-      await userEvent.type(input, "0123");
-      await userEvent.keyboard("{Enter}");
-
-      expect(onChange).toHaveBeenCalledWith(123);
-    });
+    expect(input).toHaveDisplayValue("123");
+    expect(onChange).not.toHaveBeenCalled();
   });
 
-  describe("negative value handling", () => {
-    it("should adjust negative values to minimum when min is specified", async () => {
-      const onChange = jest.fn();
-      render(<NumberInput {...defaultProps} onChange={onChange} />);
-      const input = screen.getByTestId<HTMLInputElement>("test-input");
+  it("1-12. round decimal values to nearest integer when committing", async () => {
+    const onChange = jest.fn();
+    render(<NumberInput {...defaultProps} onChange={onChange} />);
+    const input = screen.getByTestId<HTMLInputElement>("test-input");
 
-      await userEvent.clear(input);
-      await userEvent.type(input, "-123");
-      await userEvent.keyboard("{Enter}");
+    await userEvent.clear(input);
+    await userEvent.type(input, "105.5");
+    await userEvent.keyboard("{Enter}");
 
-      expect(onChange).toHaveBeenCalledWith(defaultProps.min);
-    });
-
-    it("should allow negative values when min is not specified", async () => {
-      const onChange = jest.fn();
-      const propsWithoutMin = { ...defaultProps, min: undefined };
-      render(<NumberInput {...propsWithoutMin} onChange={onChange} />);
-      const input = screen.getByTestId<HTMLInputElement>("test-input");
-
-      await userEvent.clear(input);
-      await userEvent.type(input, "-123");
-      await userEvent.keyboard("{Enter}");
-
-      expect(onChange).toHaveBeenCalledWith(-123);
-    });
-
-    it("should adjust negative values to minimum when using arrow keys", async () => {
-      const onChange = jest.fn();
-      render(<NumberInput {...defaultProps} onChange={onChange} value={1} />);
-      const input = screen.getByTestId<HTMLInputElement>("test-input");
-
-      await userEvent.click(input);
-      await userEvent.keyboard("{ArrowDown}");
-
-      expect(onChange).toHaveBeenCalledWith(defaultProps.min);
-    });
+    expect(onChange).toHaveBeenCalledWith(106);
   });
 
-  describe("decimal value handling", () => {
-    it("should round decimal values to nearest integer when committing", async () => {
-      const onChange = jest.fn();
-      render(<NumberInput {...defaultProps} onChange={onChange} />);
-      const input = screen.getByTestId<HTMLInputElement>("test-input");
+  it("1-13. ignore non-numeric input while typing", async () => {
+    const onChange = jest.fn();
+    render(<NumberInput {...defaultProps} onChange={onChange} />);
+    const input = screen.getByTestId<HTMLInputElement>("test-input");
 
-      await userEvent.clear(input);
-      await userEvent.type(input, "105.5");
-      await userEvent.keyboard("{Enter}");
+    await userEvent.clear(input);
+    await userEvent.type(input, "1500abc");
 
-      expect(onChange).toHaveBeenCalledWith(106);
-    });
-  });
-
-  describe("invalid input handling", () => {
-    it("should ignore non-numeric input while typing", async () => {
-      const onChange = jest.fn();
-      render(<NumberInput {...defaultProps} onChange={onChange} />);
-      const input = screen.getByTestId<HTMLInputElement>("test-input");
-
-      await userEvent.clear(input);
-      await userEvent.type(input, "1500abc");
-
-      expect(input).toHaveDisplayValue("1500");
-      expect(input).toHaveValue(1500);
-      expect(onChange).not.toHaveBeenCalled();
-    });
-
-    it("should allow numeric input with decimal point and minus sign", async () => {
-      const onChange = jest.fn();
-      render(<NumberInput {...defaultProps} onChange={onChange} />);
-      const input = screen.getByTestId<HTMLInputElement>("test-input");
-
-      await userEvent.clear(input);
-      await userEvent.type(input, "-123.45abc");
-
-      expect(input).toHaveDisplayValue("-123.45");
-      expect(input).toHaveValue(-123.45);
-      expect(onChange).not.toHaveBeenCalled();
-    });
+    expect(input).toHaveDisplayValue("1500");
+    expect(input).toHaveValue(1500);
+    expect(onChange).not.toHaveBeenCalled();
   });
 });

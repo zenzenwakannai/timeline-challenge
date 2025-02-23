@@ -1,18 +1,30 @@
-import { removeLeadingZeros } from "../strings";
+import { processInputValue } from "../strings";
 
-describe("removeLeadingZeros", () => {
+describe("processInputValue", () => {
   it("should remove leading zeros", () => {
-    expect(removeLeadingZeros("0123")).toBe("123");
-    expect(removeLeadingZeros("00456")).toBe("456");
-    expect(removeLeadingZeros("000789")).toBe("789");
+    expect(processInputValue("0123")).toBe("123");
+    expect(processInputValue("00456")).toBe("456");
+    expect(processInputValue("000789")).toBe("789");
   });
 
   it("should preserve single zero", () => {
-    expect(removeLeadingZeros("0")).toBe("0");
+    expect(processInputValue("0")).toBe("0");
   });
 
   it("should handle multiple zeros", () => {
-    expect(removeLeadingZeros("00")).toBe("0");
-    expect(removeLeadingZeros("000")).toBe("0");
+    expect(processInputValue("00")).toBe("0");
+    expect(processInputValue("000")).toBe("0");
+  });
+
+  it("should handle negative values", () => {
+    expect(processInputValue("-0123")).toBe("-123");
+    expect(processInputValue("-00456")).toBe("-456");
+    expect(processInputValue("-000789")).toBe("-789");
+  });
+
+  it("should handle non-numeric characters", () => {
+    expect(processInputValue("123a")).toBe("123");
+    expect(processInputValue("456b")).toBe("456");
+    expect(processInputValue("789c")).toBe("789");
   });
 });

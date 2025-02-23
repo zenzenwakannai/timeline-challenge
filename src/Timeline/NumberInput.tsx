@@ -1,12 +1,11 @@
-import classNames from "classnames";
 import React, {
   useCallback,
   useEffect,
-  useMemo,
+  useLayoutEffect,
   useRef,
   useState,
 } from "react";
-import { removeLeadingZeros } from "../utils/strings";
+import { processInputValue } from "../utils/strings";
 
 type NumberInputProps = {
   value: number;
@@ -27,26 +26,24 @@ export const NumberInput = ({
 }: NumberInputProps) => {
   const [displayedValue, setDisplayedValue] = useState(String(value));
   const inputRef = useRef<HTMLInputElement>(null);
+  const shouldSelectAfterUpdate = useRef(false);
   const isEscaping = useRef(false);
 
   useEffect(() => {
     setDisplayedValue(String(value));
   }, [value]);
 
-  const isInvalid = useMemo(() => {
-    const numericValue = Number(displayedValue);
-
-    return (
-      (min !== undefined && numericValue < min) ||
-      (max !== undefined && numericValue > max) ||
-      numericValue !== parseInt(displayedValue)
-    );
-  }, [displayedValue, max, min]);
+  useLayoutEffect(() => {
+    if (shouldSelectAfterUpdate.current) {
+      inputRef.current?.select();
+      shouldSelectAfterUpdate.current = false;
+    }
+  }, [displayedValue]);
 
   const onCommit = useCallback(
     (valueToCommit: string) => {
-      const valueWithoutLeadingZeros = removeLeadingZeros(valueToCommit);
-      const numericValue = Math.round(Number(valueWithoutLeadingZeros));
+      const processedValue = processInputValue(valueToCommit);
+      const numericValue = Math.round(Number(processedValue));
 
       let adjustedValue;
       if (min !== undefined && numericValue < min) {
@@ -63,16 +60,16 @@ export const NumberInput = ({
         setDisplayedValue(String(adjustedValue));
       }
     },
-    [min, max, value, onChange],
+    [max, min, onChange, value],
   );
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newValue = e.target.value;
+      const newValue = processInputValue(e.target.value);
       setDisplayedValue(newValue);
 
-      // Detect if the input is caused by native step buttons
-      // Note: nativeEvent won't have inputType property when using native step buttons.
+      // Detect if the input is caused by native step buttons or arrow keys
+      // Note: nativeEvent won't have inputType property when using native step buttons or arrow keys
       if (!("inputType" in e.nativeEvent)) {
         onCommit(newValue);
         inputRef.current?.select();
@@ -108,6 +105,12 @@ export const NumberInput = ({
         setDisplayedValue(String(value));
         inputRef.current?.blur();
       } else if (key === "ArrowUp" || key === "ArrowDown") {
+        // In a real browser, <input type="number"> would automatically update its value
+        // when using the native step buttons or arrow keys. However, in jsdom, this native
+        // behavior is not simulated. Therefore, we manually update the state and call
+        // onCommit.
+        e.preventDefault();
+
         const stepValue = step ?? 1;
         const newValue = String(
           Number(displayedValue) + (key === "ArrowUp" ? stepValue : -stepValue),
@@ -115,6 +118,7 @@ export const NumberInput = ({
 
         setDisplayedValue(newValue);
         onCommit(newValue);
+        shouldSelectAfterUpdate.current = true;
       }
     },
     [displayedValue, onCommit, step, value],
@@ -123,9 +127,7 @@ export const NumberInput = ({
   return (
     <input
       ref={inputRef}
-      className={classNames("rounded bg-gray-700 px-1", {
-        "text-red-500": isInvalid,
-      })}
+      className="rounded bg-gray-700 px-1"
       type="number"
       value={displayedValue}
       onChange={handleChange}
