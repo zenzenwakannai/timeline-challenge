@@ -73,4 +73,33 @@ describe("NumberInput", () => {
 
     expect(selectSpy).toHaveBeenCalled();
   });
+
+  it("selects entire text after using the native step buttons", () => {
+    render(<NumberInput {...defaultProps} />);
+    const input = screen.getByTestId<HTMLInputElement>("test-input");
+    const selectSpy = jest.spyOn(input, "select");
+
+    // Simulate using native step buttons
+    fireEvent.change(input, {
+      target: { value: "1990" },
+      nativeEvent: {}, // When using step buttons, nativeEvent won't have inputType property
+    });
+
+    expect(selectSpy).toHaveBeenCalled();
+  });
+
+  it("selects entire text after using the up arrow or down arrow keys", () => {
+    render(<NumberInput {...defaultProps} />);
+    const input = screen.getByTestId<HTMLInputElement>("test-input");
+    const selectSpy = jest.spyOn(input, "select");
+
+    // Simulate arrow key press and the subsequent change event
+    fireEvent.keyDown(input, { key: "ArrowDown" });
+    fireEvent.change(input, {
+      target: { value: "1990" },
+      nativeEvent: {}, // When using arrow keys, nativeEvent won't have inputType property
+    });
+
+    expect(selectSpy).toHaveBeenCalled();
+  });
 });

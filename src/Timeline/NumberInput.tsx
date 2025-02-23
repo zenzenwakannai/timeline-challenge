@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 type NumberInputProps = {
   value: number;
@@ -18,6 +18,7 @@ export const NumberInput = ({
   "data-testid": dataTestId,
 }: NumberInputProps) => {
   const [displayedValue, setDisplayedValue] = useState(String(value));
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setDisplayedValue(String(value));
@@ -29,6 +30,12 @@ export const NumberInput = ({
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setDisplayedValue(e.target.value);
+
+    // When using step buttons and arrow keys, nativeEvent won't have inputType property
+    // Other input methods (direct input, copy-paste) will have inputType
+    if (!("inputType" in e.nativeEvent)) {
+      inputRef.current?.select();
+    }
   }, []);
 
   const handleFocus = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
@@ -57,6 +64,7 @@ export const NumberInput = ({
 
   return (
     <input
+      ref={inputRef}
       className="rounded bg-gray-700 px-1"
       type="number"
       value={displayedValue}
