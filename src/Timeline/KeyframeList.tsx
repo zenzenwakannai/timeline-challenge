@@ -2,6 +2,7 @@ import { forwardRef, useCallback, useImperativeHandle, useRef } from "react";
 import { Segment } from "./Segment";
 
 export type KeyframeListProps = {
+  horizontalPadding: number;
   duration: number;
   onScroll: (e: React.UIEvent) => void;
 };
@@ -12,7 +13,7 @@ export type KeyframeListHandle = {
 };
 
 export const KeyframeList = forwardRef<KeyframeListHandle, KeyframeListProps>(
-  ({ duration, onScroll }, ref) => {
+  ({ horizontalPadding, duration, onScroll }, ref) => {
     const keyframeListRef = useRef<HTMLDivElement>(null);
 
     const setScrollLeft = useCallback((scrollLeft: number) => {
@@ -43,7 +44,11 @@ export const KeyframeList = forwardRef<KeyframeListHandle, KeyframeListProps>(
     return (
       <div
         ref={keyframeListRef}
-        className="min-w-0 overflow-auto px-4"
+        className="min-w-0 overflow-auto"
+        style={{
+          paddingLeft: horizontalPadding,
+          paddingRight: horizontalPadding,
+        }}
         onScroll={onScroll}
         data-testid="keyframe-list"
       >

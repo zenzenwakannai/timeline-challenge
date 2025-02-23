@@ -1,14 +1,37 @@
+import { useMemo, useRef } from "react";
+
 export type PlayheadProps = {
   time: number;
+  horizontalPadding: number;
   scrollLeft: number;
+  viewportWidth: number;
 };
 
-export const Playhead = ({ time, scrollLeft }: PlayheadProps) => {
+export const Playhead = ({
+  time,
+  horizontalPadding,
+  scrollLeft,
+  viewportWidth,
+}: PlayheadProps) => {
+  const playheadRef = useRef<HTMLDivElement>(null);
+
+  const isVisible = useMemo(() => {
+    return (
+      time - scrollLeft >= -horizontalPadding &&
+      time - scrollLeft <= viewportWidth
+    );
+  }, [horizontalPadding, scrollLeft, time, viewportWidth]);
+
   return (
     <div
-      className="absolute left-[316px] z-10 h-full border-l-2 border-solid border-yellow-600"
+      ref={playheadRef}
+      className="absolute z-10 h-full border-l-2 border-solid border-yellow-600"
+      style={{
+        left: 300 + horizontalPadding,
+        transform: `translateX(calc(${time - scrollLeft}px - 50%))`,
+      }}
+      hidden={!isVisible}
       data-testid="playhead"
-      style={{ transform: `translateX(calc(${time - scrollLeft}px - 50%))` }}
     >
       <div className="absolute -translate-x-1.5 border-[5px] border-solid border-transparent border-t-yellow-600" />
     </div>

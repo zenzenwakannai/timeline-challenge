@@ -9,6 +9,7 @@ import {
 import { roundToTen } from "../utils/numbers";
 
 export type RulerProps = {
+  horizontalPadding: number;
   setTime: (time: number) => void;
   duration: number;
   onScroll: (e: React.UIEvent) => void;
@@ -19,7 +20,7 @@ export type RulerHandle = {
 };
 
 export const Ruler = forwardRef<RulerHandle, RulerProps>(
-  ({ setTime, duration, onScroll }, ref) => {
+  ({ horizontalPadding, setTime, duration, onScroll }, ref) => {
     const rulerRef = useRef<HTMLDivElement>(null);
     const rulerBarRef = useRef<HTMLDivElement>(null);
     const [isDragging, setIsDragging] = useState(false);
@@ -97,7 +98,11 @@ export const Ruler = forwardRef<RulerHandle, RulerProps>(
     return (
       <div
         ref={rulerRef}
-        className="min-w-0 overflow-x-auto overflow-y-hidden border-b border-solid border-gray-700 px-4 py-2"
+        className="min-w-0 overflow-x-auto overflow-y-hidden border-b border-solid border-gray-700 py-2"
+        style={{
+          paddingLeft: horizontalPadding,
+          paddingRight: horizontalPadding,
+        }}
         onScroll={onScroll}
         data-testid="ruler"
       >
