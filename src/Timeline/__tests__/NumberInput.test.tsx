@@ -185,7 +185,7 @@ describe("NumberInput", () => {
     await userEvent.type(input, "105.5");
     await userEvent.keyboard("{Enter}");
 
-    expect(onChange).toHaveBeenCalledWith(106);
+    expect(onChange).toHaveBeenCalledWith(110);
   });
 
   it("1-13. ignore non-numeric input while typing", async () => {

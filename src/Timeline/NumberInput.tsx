@@ -5,6 +5,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { roundToTen } from "../utils/numbers";
 import { processInputValue } from "../utils/strings";
 
 type NumberInputProps = {
@@ -45,13 +46,11 @@ export const NumberInput = ({
       const processedValue = processInputValue(valueToCommit);
       const numericValue = Math.round(Number(processedValue));
 
-      let adjustedValue;
-      if (min !== undefined && numericValue < min) {
+      let adjustedValue = roundToTen(numericValue);
+      if (min !== undefined && adjustedValue < min) {
         adjustedValue = min;
-      } else if (max !== undefined && numericValue > max) {
+      } else if (max !== undefined && adjustedValue > max) {
         adjustedValue = max;
-      } else {
-        adjustedValue = numericValue;
       }
 
       if (value !== adjustedValue) {

@@ -1,5 +1,6 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { NumberInput } from "./NumberInput";
+import { MAX_DURATION, MIN_DURATION, MIN_TIME } from "../constants";
 
 type PlayControlsProps = {
   time: number;
@@ -7,19 +8,26 @@ type PlayControlsProps = {
 };
 
 export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
-  // TODO: implement time <= maxTime
   const [duration, setDuration] = useState(2000);
 
-  const onTimeChange = useCallback(
-    (value: number) => {
-      setTime(value);
+  useEffect(() => {
+    if (time < MIN_TIME) {
+      setTime(MIN_TIME);
+    } else if (time > duration) {
+      setTime(duration);
+    }
+  }, [duration, setTime, time]);
+
+  const handleTimeChange = useCallback(
+    (newTime: number) => {
+      setTime(newTime);
     },
     [setTime],
   );
 
-  const onDurationChange = useCallback(
-    (value: number) => {
-      setDuration(value);
+  const handleDurationChange = useCallback(
+    (newDuration: number) => {
+      setDuration(newDuration);
     },
     [setDuration],
   );
@@ -33,9 +41,9 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
         Current
         <NumberInput
           value={time}
-          onChange={onTimeChange}
-          min={0}
-          max={2000}
+          onChange={handleTimeChange}
+          min={MIN_TIME}
+          max={duration}
           step={10}
           data-testid="current-time-input"
         />
@@ -44,9 +52,9 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
       <fieldset className="flex gap-1">
         <NumberInput
           value={duration}
-          onChange={onDurationChange}
-          min={100}
-          max={2000}
+          onChange={handleDurationChange}
+          min={MIN_DURATION}
+          max={MAX_DURATION}
           step={10}
           data-testid="duration-input"
         />
