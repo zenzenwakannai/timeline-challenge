@@ -85,6 +85,24 @@ export const Timeline = () => {
     }, 0);
   };
 
+  useEffect(() => {
+    if (keyframeListRef.current && rulerRef.current) {
+      const keyframeListScrollLeft = keyframeListRef.current.getScrollLeft();
+
+      if (keyframeListScrollLeft !== undefined) {
+        rulerRef.current.setScrollLeft(keyframeListScrollLeft);
+      }
+    }
+
+    if (keyframeListRef.current && trackListRef.current) {
+      const keyframeListScrollTop = keyframeListRef.current.getScrollTop();
+
+      if (keyframeListScrollTop !== undefined) {
+        trackListRef.current.setScrollTop(keyframeListScrollTop);
+      }
+    }
+  }, []);
+
   return (
     <div
       ref={timelineRef}

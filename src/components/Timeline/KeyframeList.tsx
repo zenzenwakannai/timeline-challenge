@@ -8,6 +8,8 @@ export type KeyframeListProps = {
 };
 
 export type KeyframeListHandle = {
+  getScrollLeft: () => number | undefined;
+  getScrollTop: () => number | undefined;
   setScrollLeft: (scrollLeft: number) => void;
   setScrollTop: (scrollTop: number) => void;
 };
@@ -35,6 +37,8 @@ export const KeyframeList = forwardRef<KeyframeListHandle, KeyframeListProps>(
     useImperativeHandle(
       ref,
       () => ({
+        getScrollLeft: () => keyframeListRef.current?.scrollLeft,
+        getScrollTop: () => keyframeListRef.current?.scrollTop,
         setScrollLeft,
         setScrollTop,
       }),
