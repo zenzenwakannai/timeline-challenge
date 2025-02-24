@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { forwardRef, useCallback, useImperativeHandle, useRef } from "react";
 import { Segment } from "./Segment";
 import { TIMELINE_HORIZONTAL_SPACING } from "../../constants";
@@ -56,16 +57,9 @@ export const KeyframeList = forwardRef<KeyframeListHandle, KeyframeListProps>(
         onScroll={onScroll}
         data-testid="keyframe-list"
       >
-        <Segment duration={duration} />
-        <Segment duration={duration} />
-        <Segment duration={duration} />
-        <Segment duration={duration} />
-        <Segment duration={duration} />
-        <Segment duration={duration} />
-        <Segment duration={duration} />
-        <Segment duration={duration} />
-        <Segment duration={duration} />
-        <Segment duration={duration} />
+        {_.range(10).map((index) => (
+          <Segment key={index} duration={duration} />
+        ))}
       </div>
     );
   },
