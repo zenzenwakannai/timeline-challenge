@@ -34,62 +34,62 @@ Implement interactive features for a Timeline component. We will provide a basic
 
 https://github.com/user-attachments/assets/8dd5ef2b-6b57-43dc-91b3-0d322d148781
 
-- [ ] The displayed value updates immediately while typing, but `onChange` is not triggered until input is confirmed
-- [ ] Clicking outside the input field removes focus and changes the value
-- [ ] Clicking on the native step buttons immediately changes the value
-- [ ] Pressing up arrow or down arrow keys immediately changes the value
-- [ ] Entire text is selected when the input field gains focus
-- [ ] Entire text is selected after using the native step buttons
-- [ ] Entire text is selected after using the up arrow or down arrow keys
-- [ ] Pressing Enter confirms the new value and removes focus
-- [ ] Pressing Escape reverts to the original value and removes focus
-- [ ] Leading zeros are automatically removed
-- [ ] Negative values are automatically adjusted to the minimum allowed value
-- [ ] Decimal values are automatically rounded to the nearest integer
-- [ ] Invalid inputs (non-numeric) revert to the previous valid value
+- [ ] #1-1: The displayed value updates immediately while typing, but `onChange` is not triggered until input is confirmed
+- [ ] #1-2: Clicking outside the input field removes focus and changes the value
+- [ ] #1-3: Clicking on the native step buttons immediately changes the value
+- [ ] #1-4: Pressing up arrow or down arrow keys immediately changes the value
+- [ ] #1-5: Entire text is selected when the input field gains focus
+- [ ] #1-6: Entire text is selected after using the native step buttons
+- [ ] #1-7: Entire text is selected after using the up arrow or down arrow keys
+- [ ] #1-8: Pressing Enter confirms the new value and removes focus
+- [ ] #1-9: Pressing Escape reverts to the original value and removes focus
+- [ ] #1-10: Leading zeros are automatically removed
+- [ ] #1-11: Negative values are automatically adjusted to the minimum allowed value
+- [ ] #1-12: Decimal values are automatically rounded to the nearest integer
+- [ ] #1-13: Invalid inputs (non-numeric) revert to the previous valid value
 
 ### 2. Play Controls Behavior
 
 https://github.com/user-attachments/assets/9a669854-e0c5-4950-8364-10fe0b40d16b
 
-- [ ] Current Time is always between `0ms` and the Duration
-- [ ] Current Time adjusts if it exceeds the newly set Duration
-- [ ] Duration is always between `100ms` and `6000ms`
-- [ ] Current Time and Duration are always multiples of `10ms`
-- [ ] Current Time and Duration are always positive integers
-- [ ] Playhead position updates only after specific actions on Current Time input (losing focus, pressing Enter, using arrow keys, or clicking up/down buttons)
+- [ ] #2-1: Current Time is always between `0ms` and the Duration
+- [ ] #2-2: Current Time adjusts if it exceeds the newly set Duration
+- [ ] #2-3: Duration is always between `100ms` and `6000ms`
+- [ ] #2-4: Current Time and Duration are always multiples of `10ms`
+- [ ] #2-5: Current Time and Duration are always positive integers
+- [ ] #2-6: Playhead position updates only after specific actions on Current Time input (losing focus, pressing Enter, using arrow keys, or clicking up/down buttons)
 
 ### 3. Ruler Behavior
 
 https://github.com/user-attachments/assets/42190ade-f708-45a1-8168-2be779c66390
 
-- [ ] Clicking or dragging on the Ruler updates the Current Time and Playhead position
-- [ ] Horizontal scrolling of the Ruler is synchronized with the Keyframe List
-- [ ] Ruler length visually represents the total Duration (`1ms = 1px`)
-- [ ] Ruler length updates only after specific actions on Duration input (losing focus, pressing Enter, using arrow keys, or clicking up/down buttons)
+- [ ] #3-1: Clicking or dragging on the Ruler updates the Current Time and Playhead position
+- [ ] #3-2: Horizontal scrolling of the Ruler is synchronized with the Keyframe List
+- [ ] #3-3: Ruler length visually represents the total Duration (`1ms = 1px`)
+- [ ] #3-4: Ruler length updates only after specific actions on Duration input (losing focus, pressing Enter, using arrow keys, or clicking up/down buttons)
 
 ### 4. Track List Behavior
 
 https://github.com/user-attachments/assets/94b5e2c8-ef32-488e-97e4-d53036bbf2f7
 
-- [ ] Vertical scrolling of the Track List is synchronized with the Keyframe List
+- [ ] #4-1: Vertical scrolling of the Track List is synchronized with the Keyframe List
 
 ### 5. Keyframe List Behavior
 
 https://github.com/user-attachments/assets/99826161-f821-4e4d-b9a8-b59c16d9894e
 
-- [ ] Vertical scrolling is synchronized with the Track List
-- [ ] Horizontal scrolling is synchronized with the Ruler
-- [ ] Segment length visually represents the total Duration (`1ms = 1px`)
-- [ ] Segment length updates only after specific actions on Duration input (losing focus, pressing Enter, using arrow keys, or clicking up/down buttons)
+- [ ] #5-1: Vertical scrolling is synchronized with the Track List
+- [ ] #5-2: Horizontal scrolling is synchronized with the Ruler
+- [ ] #5-3: Segment length visually represents the total Duration (`1ms = 1px`)
+- [ ] #5-4: Segment length updates only after specific actions on Duration input (losing focus, pressing Enter, using arrow keys, or clicking up/down buttons)
 
 ### 6. Playhead Behavior
 
 https://github.com/user-attachments/assets/3940cd0d-dd9d-4331-9172-592462ad65d3
 
-- [ ] Playhead moves in sync with the Ruler and Keyframe List during horizontal scrolling
-- [ ] Playhead maintains its relative position during horizontal scrolling
-- [ ] Playhead is visible only when within the Timeline's visible area, using the `hidden` attribute when completely out of view
+- [ ] #6-1: Playhead moves in sync with the Ruler and Keyframe List during horizontal scrolling
+- [ ] #6-2: Playhead maintains its relative position during horizontal scrolling
+- [ ] #6-3: Playhead is visible only when within the Timeline's visible area, using the `hidden` attribute when completely out of view
 
 ## Implementation Guidelines
 

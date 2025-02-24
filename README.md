@@ -27,7 +27,7 @@ yarn build
 
 This project uses Jest and Playwright for testing.
 
-The functional requirements (from the original requirements) are in [`INSTRUCTIONS.md`](INSTRUCTIONS.md), with numbered headings that correspond directly to the test implementations.
+The functional requirements (from the original requirements) are in [`INSTRUCTIONS.md`](INSTRUCTIONS.md), with numbered headings (e.g. `#1-1`, `#2-1`, etc.) that correspond directly to the test implementations.
 
 ### Jest (Unit Tests)
 
