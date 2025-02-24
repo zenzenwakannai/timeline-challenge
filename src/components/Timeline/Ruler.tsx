@@ -11,6 +11,7 @@ import { useThrottle } from "../../utils/hooks";
 import { roundToTen } from "../../utils/numbers";
 
 export type RulerProps = {
+  time: number;
   setTime: (time: number) => void;
   duration: number;
   onScroll: (e: React.UIEvent) => void;
@@ -22,7 +23,7 @@ export type RulerHandle = {
 
 export const Ruler = memo(
   forwardRef<RulerHandle, RulerProps>(
-    ({ setTime, duration, onScroll }, ref) => {
+    ({ time, setTime, duration, onScroll }, ref) => {
       const rulerRef = useRef<HTMLDivElement>(null);
       const rulerBarRef = useRef<HTMLDivElement>(null);
       const isDragging = useRef(false);
@@ -109,6 +110,8 @@ export const Ruler = memo(
           }}
           onScroll={onScroll}
           data-testid="ruler"
+          role="region"
+          aria-label="Timeline Ruler"
         >
           <div
             ref={rulerBarRef}
@@ -116,6 +119,12 @@ export const Ruler = memo(
             style={{ width: `${duration}px` }}
             onMouseDown={handleMouseDown}
             data-testid="ruler-bar"
+            role="slider"
+            aria-label="Timeline Ruler"
+            aria-valuemin={0}
+            aria-valuemax={duration}
+            aria-valuenow={time}
+            aria-orientation="horizontal"
           />
         </div>
       );

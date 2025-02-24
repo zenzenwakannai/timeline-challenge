@@ -63,6 +63,8 @@ export const KeyframeList = memo(
           }}
           onScroll={onScroll}
           data-testid="keyframe-list"
+          role="group"
+          aria-label="Keyframe List"
         >
           {range(10).map((index) => (
             <Segment key={index} duration={duration} />

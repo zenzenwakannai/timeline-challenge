@@ -35,8 +35,11 @@ export const PlayControls = memo(
       <div
         className="flex select-none items-center justify-between border-b border-r border-solid border-gray-700 px-2"
         data-testid="play-controls"
+        role="group"
+        aria-label="Play Controls"
       >
         <fieldset className="flex gap-1">
+          <legend className="sr-only">Current Time Setting</legend>
           Current
           <NumberInput
             value={time}
@@ -46,10 +49,15 @@ export const PlayControls = memo(
             max={duration}
             step={10}
             data-testid="current-time-input"
+            aria-label="Current Time"
+            aria-valuemin={MIN_TIME}
+            aria-valuemax={duration}
+            aria-valuenow={time}
           />
         </fieldset>
         -
         <fieldset className="flex gap-1">
+          <legend className="sr-only">Duration Setting</legend>
           <NumberInput
             value={duration}
             onChange={handleDurationChange}
@@ -58,6 +66,10 @@ export const PlayControls = memo(
             max={MAX_DURATION}
             step={10}
             data-testid="duration-input"
+            aria-label="Duration"
+            aria-valuemin={MIN_DURATION}
+            aria-valuemax={MAX_DURATION}
+            aria-valuenow={duration}
           />
           Duration
         </fieldset>

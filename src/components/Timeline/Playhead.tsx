@@ -1,17 +1,19 @@
 import { memo, useRef } from "react";
 import {
   CONTROLS_COLUMN_WIDTH,
+  MIN_DURATION,
   TIMELINE_HORIZONTAL_SPACING,
 } from "../../constants";
 
 export type PlayheadProps = {
   time: number;
+  duration: number;
   scrollLeft: number;
   rulerWidth: number;
 };
 
 export const Playhead = memo(
-  ({ time, scrollLeft, rulerWidth }: PlayheadProps) => {
+  ({ time, duration, scrollLeft, rulerWidth }: PlayheadProps) => {
     const playheadRef = useRef<HTMLDivElement>(null);
 
     const isVisible =
@@ -28,6 +30,12 @@ export const Playhead = memo(
         }}
         hidden={!isVisible}
         data-testid="playhead"
+        role="slider"
+        aria-label="Playhead"
+        aria-valuemin={MIN_DURATION}
+        aria-valuemax={duration}
+        aria-valuenow={time}
+        aria-orientation="horizontal"
       >
         <div className="absolute -translate-x-1.5 border-[5px] border-solid border-transparent border-t-yellow-600" />
       </div>

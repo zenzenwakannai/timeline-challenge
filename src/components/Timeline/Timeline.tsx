@@ -127,6 +127,8 @@ export const Timeline = () => {
         gridTemplateColumns: `${CONTROLS_COLUMN_WIDTH}px 1fr`,
       }}
       data-testid="timeline"
+      role="region"
+      aria-label="Timeline"
     >
       <PlayControls
         time={time}
@@ -136,6 +138,7 @@ export const Timeline = () => {
       />
       <Ruler
         ref={rulerRef}
+        time={time}
         setTime={setTime}
         duration={duration}
         onScroll={handleRulerScroll}
@@ -146,7 +149,12 @@ export const Timeline = () => {
         duration={duration}
         onScroll={handleKeyframeListScroll}
       />
-      <Playhead time={time} scrollLeft={scrollLeft} rulerWidth={rulerWidth} />
+      <Playhead
+        time={time}
+        duration={duration}
+        scrollLeft={scrollLeft}
+        rulerWidth={rulerWidth}
+      />
     </div>
   );
 };
