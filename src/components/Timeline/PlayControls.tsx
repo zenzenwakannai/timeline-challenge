@@ -1,6 +1,8 @@
-import { useCallback, useLayoutEffect } from "react";
+import _ from "lodash";
+import { useCallback, useEffect } from "react";
 import { NumberInput } from "./NumberInput";
 import { MAX_DURATION, MIN_DURATION, MIN_TIME } from "../../constants";
+import { roundToTen } from "../../utils/numbers";
 
 export type PlayControlsProps = {
   time: number;
@@ -15,12 +17,8 @@ export const PlayControls = ({
   duration,
   setDuration,
 }: PlayControlsProps) => {
-  useLayoutEffect(() => {
-    if (time < MIN_TIME) {
-      setTime(MIN_TIME);
-    } else if (time > duration) {
-      setTime(duration);
-    }
+  useEffect(() => {
+    setTime(_.clamp(time, MIN_TIME, duration));
   }, [duration, setTime, time]);
 
   const handleTimeChange = useCallback(
@@ -47,6 +45,7 @@ export const PlayControls = ({
         <NumberInput
           value={time}
           onChange={handleTimeChange}
+          roundToNearestIntegerMethod={roundToTen}
           min={MIN_TIME}
           max={duration}
           step={10}
@@ -58,6 +57,7 @@ export const PlayControls = ({
         <NumberInput
           value={duration}
           onChange={handleDurationChange}
+          roundToNearestIntegerMethod={roundToTen}
           min={MIN_DURATION}
           max={MAX_DURATION}
           step={10}
