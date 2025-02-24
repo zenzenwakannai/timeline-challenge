@@ -37,7 +37,7 @@ export const TrackList = memo(
     return (
       <div
         ref={trackListRef}
-        className="relative grid select-none grid-flow-row auto-rows-[40px] overflow-auto border-r border-solid border-r-gray-700"
+        className="relative grid select-none grid-flow-row auto-rows-[40px] overflow-auto border-r border-solid border-r-gray-700 will-change-scroll"
         onScroll={onScroll}
         data-testid="track-list"
       >

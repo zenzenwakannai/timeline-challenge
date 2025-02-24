@@ -102,7 +102,7 @@ export const Ruler = memo(
       return (
         <div
           ref={rulerRef}
-          className="min-w-0 overflow-x-auto overflow-y-hidden border-b border-solid border-gray-700 py-2"
+          className="min-w-0 overflow-x-auto overflow-y-hidden border-b border-solid border-gray-700 py-2 will-change-scroll"
           style={{
             paddingLeft: TIMELINE_HORIZONTAL_SPACING,
             paddingRight: TIMELINE_HORIZONTAL_SPACING,

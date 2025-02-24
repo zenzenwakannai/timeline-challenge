@@ -21,7 +21,7 @@ export const Playhead = memo(
     return (
       <div
         ref={playheadRef}
-        className="absolute z-10 h-full border-l-2 border-solid border-yellow-600"
+        className="absolute z-10 h-full border-l-2 border-solid border-yellow-600 will-change-transform"
         style={{
           left: CONTROLS_COLUMN_WIDTH + TIMELINE_HORIZONTAL_SPACING,
           transform: `translateX(calc(${time - scrollLeft}px - 50%))`,

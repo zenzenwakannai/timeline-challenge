@@ -56,7 +56,7 @@ export const KeyframeList = memo(
       return (
         <div
           ref={keyframeListRef}
-          className="min-w-0 overflow-auto"
+          className="min-w-0 overflow-auto will-change-scroll"
           style={{
             paddingLeft: TIMELINE_HORIZONTAL_SPACING,
             paddingRight: TIMELINE_HORIZONTAL_SPACING,
