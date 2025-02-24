@@ -5,12 +5,17 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { roundToTen } from "../../utils/numbers";
+import { roundToNearestInteger } from "../../utils/numbers";
 import { processInputValue } from "../../utils/strings";
+
+const formatValueToDisplayedValue = (value: number) => {
+  return String(value);
+};
 
 export type NumberInputProps = {
   value: number;
   onChange: (value: number) => void;
+  roundToNearestIntegerMethod?: (value: number) => number;
   min?: number;
   max?: number;
   step?: number;
@@ -20,18 +25,21 @@ export type NumberInputProps = {
 export const NumberInput = ({
   value,
   onChange,
+  roundToNearestIntegerMethod = roundToNearestInteger,
   min,
   max,
   step,
   "data-testid": dataTestId,
 }: NumberInputProps) => {
-  const [displayedValue, setDisplayedValue] = useState(String(value));
+  const [displayedValue, setDisplayedValue] = useState(
+    formatValueToDisplayedValue(value),
+  );
   const inputRef = useRef<HTMLInputElement>(null);
   const shouldSelectAfterUpdate = useRef(false);
   const isEscaping = useRef(false);
 
   useEffect(() => {
-    setDisplayedValue(String(value));
+    setDisplayedValue(formatValueToDisplayedValue(value));
   }, [value]);
 
   useLayoutEffect(() => {
@@ -44,9 +52,14 @@ export const NumberInput = ({
   const onCommit = useCallback(
     (valueToCommit: string) => {
       const processedValue = processInputValue(valueToCommit);
-      const numericValue = Math.round(Number(processedValue));
+      const numericValue = Number(processedValue);
 
-      let adjustedValue = roundToTen(numericValue);
+      if (isNaN(numericValue)) {
+        setDisplayedValue(String(value));
+        return;
+      }
+
+      let adjustedValue = roundToNearestIntegerMethod(numericValue);
       if (min !== undefined && adjustedValue < min) {
         adjustedValue = min;
       } else if (max !== undefined && adjustedValue > max) {
@@ -59,7 +72,7 @@ export const NumberInput = ({
         setDisplayedValue(String(adjustedValue));
       }
     },
-    [max, min, onChange, value],
+    [max, min, onChange, roundToNearestIntegerMethod, value],
   );
 
   const handleChange = useCallback(
@@ -67,8 +80,9 @@ export const NumberInput = ({
       const newValue = processInputValue(e.target.value);
       setDisplayedValue(newValue);
 
-      // Detect if the input is caused by native step buttons or arrow keys
-      // Note: nativeEvent won't have inputType property when using native step buttons or arrow keys
+      // A workaround to detect if the input is caused by native step buttons or arrow
+      // keys. Note that nativeEvent won't have inputType property when using native step
+      // buttons or arrow keys.
       if (!("inputType" in e.nativeEvent)) {
         onCommit(newValue);
         inputRef.current?.select();
@@ -82,10 +96,12 @@ export const NumberInput = ({
   }, []);
 
   const handleBlur = useCallback(() => {
-    if (!isEscaping.current) {
-      onCommit(displayedValue);
+    if (isEscaping.current) {
+      isEscaping.current = false;
+      return;
     }
-    isEscaping.current = false;
+
+    onCommit(displayedValue);
   }, [displayedValue, onCommit]);
 
   const handleKeyDown = useCallback(
@@ -104,10 +120,6 @@ export const NumberInput = ({
         setDisplayedValue(String(value));
         inputRef.current?.blur();
       } else if (key === "ArrowUp" || key === "ArrowDown") {
-        // In a real browser, <input type="number"> would automatically update its value
-        // when using the native step buttons or arrow keys. However, in jsdom, this native
-        // behavior is not simulated. Therefore, we manually update the state and call
-        // onCommit.
         e.preventDefault();
 
         const stepValue = step ?? 1;
@@ -117,7 +129,7 @@ export const NumberInput = ({
 
         setDisplayedValue(newValue);
         onCommit(newValue);
-        shouldSelectAfterUpdate.current = true;
+        shouldSelectAfterUpdate.current = true; // Firefox doesn't trigger select when using arrow keys
       }
     },
     [displayedValue, onCommit, step, value],
