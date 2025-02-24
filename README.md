@@ -53,6 +53,13 @@ The end-to-end tests are located in the `e2e` folder.
 To run the Playwright tests:
 
 ```sh
+# Install Playwright browsers if not already installed
+yarn playwright install
+
+# Start the development server
+yarn start
+
+# Run the tests
 yarn playwright test
 ```
 
