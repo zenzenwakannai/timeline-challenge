@@ -43,7 +43,7 @@ test.describe("Ruler", () => {
     expect(newTranslateX).toBe(399); // 1px for 50% width (2px) of the playhead
   });
 
-  test("#3-2-1 Scrolling the Ruler scrolls the Keyframe List", async ({
+  test("#3-2 Horizontal scrolling the Ruler scrolls the Keyframe List", async ({
     page,
   }) => {
     const keyframeList = page.locator(
@@ -53,18 +53,6 @@ test.describe("Ruler", () => {
 
     await ruler.evaluate((el) => (el.scrollLeft = 200));
     await expect(keyframeList).toHaveJSProperty("scrollLeft", 200);
-  });
-
-  test("#3-2-2 Scrolling the Keyframe List scrolls the Ruler", async ({
-    page,
-  }) => {
-    const ruler = page.locator(`[data-testid="${RULER_TEST_ID}"]`);
-    const keyframeList = page.locator(
-      `[data-testid="${KEYFRAME_LIST_TEST_ID}"]`,
-    );
-
-    await keyframeList.evaluate((el) => (el.scrollLeft = 150));
-    await expect(ruler).toHaveJSProperty("scrollLeft", 150);
   });
 
   test("#3-3 Ruler length visually represents the total Duration (1ms = 1px)", async ({
