@@ -116,9 +116,15 @@ export const NumberInput = ({
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
-      const { key } = e;
+      const { key, altKey, ctrlKey, metaKey, shiftKey } = e;
 
-      if (/^[A-Za-z]$/.test(key)) {
+      if (
+        /^[A-Za-z]$/.test(key) &&
+        !altKey &&
+        !ctrlKey &&
+        !metaKey &&
+        !shiftKey
+      ) {
         e.preventDefault();
         return;
       }

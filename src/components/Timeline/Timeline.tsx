@@ -8,7 +8,6 @@ import { TrackList, TrackListHandle } from "./TrackList";
 const horizontalPadding = 16;
 
 export const Timeline = () => {
-  // FIXME: performance concerned
   const [time, setTime] = useState(0);
   const [duration, setDuration] = useState(2000);
   const [scrollLeft, setScrollLeft] = useState(0);
@@ -39,6 +38,22 @@ export const Timeline = () => {
       };
     }
   }, []);
+
+  // Prevent browser's swiping to go back feature when the timeline is at the
+  // beginning
+  useEffect(() => {
+    const handleWheel = (e: WheelEvent) => {
+      if (scrollLeft === 0 && time === 0 && e.deltaX < 0) {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener("wheel", handleWheel, { passive: false });
+
+    return () => {
+      document.removeEventListener("wheel", handleWheel);
+    };
+  }, [scrollLeft, time]);
 
   const handleRulerScroll = (e: React.UIEvent) => {
     if (isScrolling.current) {
