@@ -4,7 +4,7 @@ import { NumberInput } from "../NumberInput";
 
 describe("NumberInput", () => {
   const defaultProps = {
-    value: 2000,
+    value: 1000,
     onChange: jest.fn(),
     min: 0,
     max: 2000,
@@ -16,34 +16,47 @@ describe("NumberInput", () => {
     jest.restoreAllMocks();
   });
 
-  it("displays the initial value", () => {
+  test("#1-0 displays the initial value", () => {
     render(<NumberInput {...defaultProps} />);
     const input = screen.getByTestId<HTMLInputElement>("test-input");
 
     expect(input).toHaveValue(defaultProps.value);
   });
 
-  it("1-1. updates displayed value while typing without triggering onChange", async () => {
+  test("#1-1 updates the displayed value immediately while typing but does not trigger onChange until confirmed", async () => {
     render(<NumberInput {...defaultProps} />);
     const input = screen.getByTestId<HTMLInputElement>("test-input");
+    const user = userEvent.setup();
 
-    await userEvent.clear(input);
-    await userEvent.type(input, "1500");
-
+    await user.clear(input);
+    await user.type(input, "1500");
     expect(input).toHaveValue(1500);
     expect(defaultProps.onChange).not.toHaveBeenCalled();
+
+    await user.keyboard("{Enter}");
+    expect(defaultProps.onChange).toHaveBeenCalledWith(1500);
   });
 
-  it("1-2. changes value and removes focus when clicking outside the input field", async () => {
-    render(<NumberInput {...defaultProps} />);
+  test("#1-2 changes value and removes focus when clicking outside the input field", async () => {
+    render(
+      <>
+        <NumberInput {...defaultProps} />
+        <div data-testid="outside-element" />
+      </>
+    );
     const input = screen.getByTestId<HTMLInputElement>("test-input");
+    const outsideElement = screen.getByTestId("outside-element");
+    const user = userEvent.setup();
 
-    await userEvent.clear(input);
-    await userEvent.type(input, "1500");
-    await userEvent.click(document.body); // Simulate clicking outside the input field
+    await user.click(input);
+    expect(input).toHaveFocus();
 
-    expect(input).not.toHaveFocus();
+    await user.clear(input);
+    await user.type(input, "1500");
     expect(input).toHaveValue(1500);
+
+    await user.click(outsideElement);
+    expect(input).not.toHaveFocus();
     expect(defaultProps.onChange).toHaveBeenCalledWith(1500);
   });
 

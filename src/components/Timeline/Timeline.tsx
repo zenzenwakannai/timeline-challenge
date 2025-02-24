@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
+import { KeyframeList, KeyframeListHandle } from "./KeyframeList";
+import { PlayControls } from "./PlayControls";
 import { Playhead } from "./Playhead";
 import { Ruler, RulerHandle } from "./Ruler";
 import { TrackList, TrackListHandle } from "./TrackList";
-import { KeyframeList, KeyframeListHandle } from "./KeyframeList";
-import { PlayControls } from "./PlayControls";
 
 const horizontalPadding = 16;
 
