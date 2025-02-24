@@ -1,12 +1,15 @@
+import classNames from "classnames";
 import React, {
   useCallback,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
 import { roundToNearestInteger } from "../../utils/numbers";
 import { processInputValue } from "../../utils/strings";
+import { defaultValidator, ValidatorFunction } from "../../utils/validators";
 
 const formatValueToDisplayedValue = (value: number) => {
   return String(value);
@@ -15,20 +18,22 @@ const formatValueToDisplayedValue = (value: number) => {
 export type NumberInputProps = {
   value: number;
   onChange: (value: number) => void;
-  roundToNearestIntegerMethod?: (value: number) => number;
   min?: number;
   max?: number;
   step?: number;
+  roundToNearestIntegerMethod?: (value: number) => number;
+  validator?: ValidatorFunction;
   "data-testid"?: string;
 };
 
 export const NumberInput = ({
   value,
   onChange,
-  roundToNearestIntegerMethod = roundToNearestInteger,
   min,
   max,
   step,
+  roundToNearestIntegerMethod = roundToNearestInteger,
+  validator = defaultValidator,
   "data-testid": dataTestId,
 }: NumberInputProps) => {
   const [displayedValue, setDisplayedValue] = useState(
@@ -48,6 +53,11 @@ export const NumberInput = ({
       shouldSelectAfterUpdate.current = false;
     }
   }, [displayedValue]);
+
+  const isValid = useMemo(
+    () => validator({ displayedValue, min, max, step }),
+    [displayedValue, max, min, step, validator],
+  );
 
   const onCommit = useCallback(
     (valueToCommit: string) => {
@@ -138,7 +148,9 @@ export const NumberInput = ({
   return (
     <input
       ref={inputRef}
-      className="rounded bg-gray-700 px-1"
+      className={classNames("rounded bg-gray-700 px-1", {
+        "text-red-500": !isValid,
+      })}
       type="number"
       value={displayedValue}
       onChange={handleChange}
