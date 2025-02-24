@@ -25,6 +25,7 @@ test.describe("KeyframeList", () => {
     const trackList = page.locator(`[data-testid="${TRACK_LIST_TEST_ID}"]`);
 
     await keyframeList.evaluate((el) => (el.scrollTop = 120));
+    await page.waitForTimeout(100);
     await expect(trackList).toHaveJSProperty("scrollTop", 120);
   });
 
@@ -37,6 +38,7 @@ test.describe("KeyframeList", () => {
     );
 
     await keyframeList.evaluate((el) => (el.scrollLeft = 150));
+    await page.waitForTimeout(100);
     await expect(ruler).toHaveJSProperty("scrollLeft", 150);
   });
 
