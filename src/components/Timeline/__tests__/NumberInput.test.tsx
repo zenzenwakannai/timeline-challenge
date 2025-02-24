@@ -90,30 +90,25 @@ describe("NumberInput", () => {
     expect(defaultProps.onChange).not.toHaveBeenCalled();
   });
 
-  test("#1-10 preserve at most one leading zero but not more than one while typing", async () => {
+  test("#1-10 preserve at most one leading zero but not more than one when committing", async () => {
     render(<NumberInput {...defaultProps} />);
     const input = screen.getByTestId<HTMLInputElement>("test-input");
     const user = userEvent.setup();
 
     await user.clear(input);
     await user.type(input, "0");
-    expect(input).toHaveDisplayValue("0");
-    expect(defaultProps.onChange).not.toHaveBeenCalled();
+    await user.keyboard("{Enter}");
+    expect(defaultProps.onChange).toHaveBeenCalledWith(0);
 
     await user.clear(input);
     await user.type(input, "000");
-    expect(input).toHaveDisplayValue("0");
-    expect(defaultProps.onChange).not.toHaveBeenCalled();
+    await user.keyboard("{Enter}");
+    expect(defaultProps.onChange).toHaveBeenCalledWith(0);
 
     await user.clear(input);
     await user.type(input, "000123");
-    expect(input).toHaveDisplayValue("123");
-    expect(defaultProps.onChange).not.toHaveBeenCalled();
-
-    await user.clear(input);
-    await user.type(input, "-000456");
-    expect(input).toHaveDisplayValue("-456");
-    expect(defaultProps.onChange).not.toHaveBeenCalled();
+    await user.keyboard("{Enter}");
+    expect(defaultProps.onChange).toHaveBeenCalledWith(123);
   });
 
   test("#1-11 adjusts negative values to the minimum allowed value when committing", async () => {

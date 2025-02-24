@@ -87,7 +87,7 @@ export const NumberInput = ({
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newValue = processInputValue(e.target.value);
+      const newValue = e.target.value;
       setDisplayedValue(newValue);
 
       // A workaround to detect if the input is caused by native step buttons or arrow
@@ -118,28 +118,44 @@ export const NumberInput = ({
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       const { key } = e;
 
-      if (key === "Enter") {
+      if (/^[A-Za-z]$/.test(key)) {
         e.preventDefault();
+        return;
+      }
 
-        onCommit(displayedValue);
-        inputRef.current?.blur();
-      } else if (key === "Escape") {
-        e.preventDefault();
+      switch (key) {
+        case "Enter": {
+          e.preventDefault();
 
-        isEscaping.current = true; // Prevent calling onChange in handleBlur
-        setDisplayedValue(String(value));
-        inputRef.current?.blur();
-      } else if (key === "ArrowUp" || key === "ArrowDown") {
-        e.preventDefault();
+          onCommit(displayedValue);
+          inputRef.current?.blur();
+          break;
+        }
+        case "Escape": {
+          e.preventDefault();
 
-        const stepValue = step ?? 1;
-        const newValue = String(
-          Number(displayedValue) + (key === "ArrowUp" ? stepValue : -stepValue),
-        );
+          isEscaping.current = true; // Prevent calling onChange in handleBlur
+          setDisplayedValue(String(value));
+          inputRef.current?.blur();
+          break;
+        }
+        case "ArrowUp":
+        case "ArrowDown": {
+          e.preventDefault();
 
-        setDisplayedValue(newValue);
-        onCommit(newValue);
-        shouldSelectAfterUpdate.current = true; // Firefox doesn't trigger select when using arrow keys
+          const stepValue = step ?? 1;
+          const newValue = String(
+            Number(displayedValue) +
+              (key === "ArrowUp" ? stepValue : -stepValue),
+          );
+
+          setDisplayedValue(newValue);
+          onCommit(newValue);
+          shouldSelectAfterUpdate.current = true; // Firefox doesn't trigger select when using arrow keys
+          break;
+        }
+        default:
+          break;
       }
     },
     [displayedValue, onCommit, step, value],
