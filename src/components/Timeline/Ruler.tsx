@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { roundToTen } from "../utils/numbers";
+import { roundToTen } from "../../utils/numbers";
 
 export type RulerProps = {
   horizontalPadding: number;

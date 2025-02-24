@@ -5,8 +5,8 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { roundToTen } from "../utils/numbers";
-import { processInputValue } from "../utils/strings";
+import { roundToTen } from "../../utils/numbers";
+import { processInputValue } from "../../utils/strings";
 
 export type NumberInputProps = {
   value: number;
