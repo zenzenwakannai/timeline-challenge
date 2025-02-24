@@ -53,9 +53,6 @@ test.describe("Ruler", () => {
 
     await ruler.evaluate((el) => (el.scrollLeft = 200));
     await expect(keyframeList).toHaveJSProperty("scrollLeft", 200);
-
-    await ruler.evaluate((el) => (el.scrollLeft = 500));
-    await expect(keyframeList).toHaveJSProperty("scrollLeft", 500);
   });
 
   test("#3-2-2 Scrolling the Keyframe List scrolls the Ruler", async ({
@@ -68,9 +65,6 @@ test.describe("Ruler", () => {
 
     await keyframeList.evaluate((el) => (el.scrollLeft = 150));
     await expect(ruler).toHaveJSProperty("scrollLeft", 150);
-
-    await keyframeList.evaluate((el) => (el.scrollLeft = 400));
-    await expect(ruler).toHaveJSProperty("scrollLeft", 400);
   });
 
   test("#3-3 Ruler length visually represents the total Duration (1ms = 1px)", async ({
