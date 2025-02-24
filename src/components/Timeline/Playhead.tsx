@@ -1,30 +1,28 @@
 import { useRef } from "react";
+import {
+  CONTROLS_COLUMN_WIDTH,
+  TIMELINE_HORIZONTAL_SPACING,
+} from "../../constants";
 
 export type PlayheadProps = {
   time: number;
-  horizontalPadding: number;
   scrollLeft: number;
   rulerWidth: number;
 };
 
-export const Playhead = ({
-  time,
-  horizontalPadding,
-  scrollLeft,
-  rulerWidth,
-}: PlayheadProps) => {
+export const Playhead = ({ time, scrollLeft, rulerWidth }: PlayheadProps) => {
   const playheadRef = useRef<HTMLDivElement>(null);
 
   const isVisible =
-    time + horizontalPadding - scrollLeft >= 0 &&
-    time + horizontalPadding - scrollLeft <= rulerWidth;
+    time + TIMELINE_HORIZONTAL_SPACING - scrollLeft >= 0 &&
+    time + TIMELINE_HORIZONTAL_SPACING - scrollLeft <= rulerWidth;
 
   return (
     <div
       ref={playheadRef}
       className="absolute z-10 h-full border-l-2 border-solid border-yellow-600"
       style={{
-        left: 300 + horizontalPadding,
+        left: CONTROLS_COLUMN_WIDTH + TIMELINE_HORIZONTAL_SPACING,
         transform: `translateX(calc(${time - scrollLeft}px - 50%))`,
       }}
       hidden={!isVisible}

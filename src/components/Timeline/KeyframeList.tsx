@@ -1,8 +1,8 @@
 import { forwardRef, useCallback, useImperativeHandle, useRef } from "react";
 import { Segment } from "./Segment";
+import { TIMELINE_HORIZONTAL_SPACING } from "../../constants";
 
 export type KeyframeListProps = {
-  horizontalPadding: number;
   duration: number;
   onScroll: (e: React.UIEvent) => void;
 };
@@ -15,7 +15,7 @@ export type KeyframeListHandle = {
 };
 
 export const KeyframeList = forwardRef<KeyframeListHandle, KeyframeListProps>(
-  ({ horizontalPadding, duration, onScroll }, ref) => {
+  ({ duration, onScroll }, ref) => {
     const keyframeListRef = useRef<HTMLDivElement>(null);
 
     const setScrollLeft = useCallback((scrollLeft: number) => {
@@ -50,8 +50,8 @@ export const KeyframeList = forwardRef<KeyframeListHandle, KeyframeListProps>(
         ref={keyframeListRef}
         className="min-w-0 overflow-auto"
         style={{
-          paddingLeft: horizontalPadding,
-          paddingRight: horizontalPadding,
+          paddingLeft: TIMELINE_HORIZONTAL_SPACING,
+          paddingRight: TIMELINE_HORIZONTAL_SPACING,
         }}
         onScroll={onScroll}
         data-testid="keyframe-list"

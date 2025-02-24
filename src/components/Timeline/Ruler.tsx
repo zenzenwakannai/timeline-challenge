@@ -5,10 +5,11 @@ import {
   useImperativeHandle,
   useRef,
 } from "react";
+import { TIMELINE_HORIZONTAL_SPACING } from "../../constants";
 import { useThrottle } from "../../utils/hooks";
 import { roundToTen } from "../../utils/numbers";
+
 export type RulerProps = {
-  horizontalPadding: number;
   setTime: (time: number) => void;
   duration: number;
   onScroll: (e: React.UIEvent) => void;
@@ -19,7 +20,7 @@ export type RulerHandle = {
 };
 
 export const Ruler = forwardRef<RulerHandle, RulerProps>(
-  ({ horizontalPadding, setTime, duration, onScroll }, ref) => {
+  ({ setTime, duration, onScroll }, ref) => {
     const rulerRef = useRef<HTMLDivElement>(null);
     const rulerBarRef = useRef<HTMLDivElement>(null);
     const isDragging = useRef(false);
@@ -101,8 +102,8 @@ export const Ruler = forwardRef<RulerHandle, RulerProps>(
         ref={rulerRef}
         className="min-w-0 overflow-x-auto overflow-y-hidden border-b border-solid border-gray-700 py-2"
         style={{
-          paddingLeft: horizontalPadding,
-          paddingRight: horizontalPadding,
+          paddingLeft: TIMELINE_HORIZONTAL_SPACING,
+          paddingRight: TIMELINE_HORIZONTAL_SPACING,
         }}
         onScroll={onScroll}
         data-testid="ruler"

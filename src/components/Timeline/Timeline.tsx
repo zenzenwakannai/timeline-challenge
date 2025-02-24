@@ -4,8 +4,7 @@ import { PlayControls } from "./PlayControls";
 import { Playhead } from "./Playhead";
 import { Ruler, RulerHandle } from "./Ruler";
 import { TrackList, TrackListHandle } from "./TrackList";
-
-const horizontalPadding = 16;
+import { CONTROLS_COLUMN_WIDTH } from "../../constants";
 
 export const Timeline = () => {
   const [time, setTime] = useState(0);
@@ -26,8 +25,7 @@ export const Timeline = () => {
         const entry = entries[0];
 
         if (entry) {
-          // 300px is the width of PlayControls/TrackList
-          setRulerWidth(entry.contentRect.width - 300);
+          setRulerWidth(entry.contentRect.width - CONTROLS_COLUMN_WIDTH);
         }
       });
 
@@ -121,7 +119,10 @@ export const Timeline = () => {
   return (
     <div
       ref={timelineRef}
-      className="relative grid h-[300px] w-full grid-cols-[300px_1fr] grid-rows-[40px_1fr] border-t-2 border-solid border-gray-700 bg-gray-800"
+      className={`relative grid h-[300px] w-full grid-rows-[40px_1fr] border-t-2 border-solid border-gray-700 bg-gray-800`}
+      style={{
+        gridTemplateColumns: `${CONTROLS_COLUMN_WIDTH}px 1fr`,
+      }}
       data-testid="timeline"
     >
       <PlayControls
@@ -132,7 +133,6 @@ export const Timeline = () => {
       />
       <Ruler
         ref={rulerRef}
-        horizontalPadding={horizontalPadding}
         setTime={setTime}
         duration={duration}
         onScroll={handleRulerScroll}
@@ -140,16 +140,10 @@ export const Timeline = () => {
       <TrackList ref={trackListRef} onScroll={handleTrackListScroll} />
       <KeyframeList
         ref={keyframeListRef}
-        horizontalPadding={horizontalPadding}
         duration={duration}
         onScroll={handleKeyframeListScroll}
       />
-      <Playhead
-        time={time}
-        horizontalPadding={horizontalPadding}
-        scrollLeft={scrollLeft}
-        rulerWidth={rulerWidth}
-      />
+      <Playhead time={time} scrollLeft={scrollLeft} rulerWidth={rulerWidth} />
     </div>
   );
 };
