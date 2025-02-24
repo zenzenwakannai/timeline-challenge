@@ -31,7 +31,7 @@ export const TrackList = forwardRef<TrackListHandle, TrackListProps>(
     return (
       <div
         ref={trackListRef}
-        className="relative grid select-none grid-flow-row auto-rows-[40px] overflow-auto border-r border-solid border-r-gray-700"
+        className="relative grid grid-flow-row auto-rows-[40px] overflow-auto border-r border-solid border-r-gray-700"
         onScroll={onScroll}
         data-testid="track-list"
       >
