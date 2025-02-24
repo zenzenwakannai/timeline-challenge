@@ -12,7 +12,7 @@ export const Timeline = () => {
   const [time, setTime] = useState(0);
   const [duration, setDuration] = useState(2000);
   const [scrollLeft, setScrollLeft] = useState(0);
-  const [viewportWidth, setViewportWidth] = useState(0);
+  const [rulerWidth, setRulerWidth] = useState(0);
 
   const timelineRef = useRef<HTMLDivElement>(null);
   const rulerRef = useRef<RulerHandle>(null);
@@ -28,7 +28,7 @@ export const Timeline = () => {
 
         if (entry) {
           // 300px is the width of PlayControls/TrackList
-          setViewportWidth(entry.contentRect.width - 300);
+          setRulerWidth(entry.contentRect.width - 300);
         }
       });
 
@@ -106,7 +106,7 @@ export const Timeline = () => {
   return (
     <div
       ref={timelineRef}
-      className="relative z-0 grid h-[300px] w-full grid-cols-[300px_1fr] grid-rows-[40px_1fr] border-t-2 border-solid border-gray-700 bg-gray-800"
+      className="relative grid h-[300px] w-full grid-cols-[300px_1fr] grid-rows-[40px_1fr] border-t-2 border-solid border-gray-700 bg-gray-800"
       data-testid="timeline"
     >
       <PlayControls
@@ -133,7 +133,7 @@ export const Timeline = () => {
         time={time}
         horizontalPadding={horizontalPadding}
         scrollLeft={scrollLeft}
-        viewportWidth={viewportWidth}
+        rulerWidth={rulerWidth}
       />
     </div>
   );

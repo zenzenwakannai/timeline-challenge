@@ -1,26 +1,23 @@
-import { useMemo, useRef } from "react";
+import { useRef } from "react";
 
 export type PlayheadProps = {
   time: number;
   horizontalPadding: number;
   scrollLeft: number;
-  viewportWidth: number;
+  rulerWidth: number;
 };
 
 export const Playhead = ({
   time,
   horizontalPadding,
   scrollLeft,
-  viewportWidth,
+  rulerWidth,
 }: PlayheadProps) => {
   const playheadRef = useRef<HTMLDivElement>(null);
 
-  const isVisible = useMemo(() => {
-    return (
-      time - scrollLeft >= -horizontalPadding &&
-      time - scrollLeft <= viewportWidth
-    );
-  }, [horizontalPadding, scrollLeft, time, viewportWidth]);
+  const isVisible =
+    time + horizontalPadding - scrollLeft >= 0 &&
+    time + horizontalPadding - scrollLeft <= rulerWidth;
 
   return (
     <div
