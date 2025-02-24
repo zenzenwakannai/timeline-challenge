@@ -91,9 +91,9 @@ export const NumberInput = ({
     [onCommit],
   );
 
-  const handleFocus = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
     e.target.select();
-  }, []);
+  };
 
   const handleBlur = useCallback(() => {
     if (isEscaping.current) {

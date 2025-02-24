@@ -4,10 +4,9 @@ import {
   useEffect,
   useImperativeHandle,
   useRef,
-  useState,
 } from "react";
+import { useThrottle } from "../../utils/hooks";
 import { roundToTen } from "../../utils/numbers";
-
 export type RulerProps = {
   horizontalPadding: number;
   setTime: (time: number) => void;
@@ -23,7 +22,7 @@ export const Ruler = forwardRef<RulerHandle, RulerProps>(
   ({ horizontalPadding, setTime, duration, onScroll }, ref) => {
     const rulerRef = useRef<HTMLDivElement>(null);
     const rulerBarRef = useRef<HTMLDivElement>(null);
-    const [isDragging, setIsDragging] = useState(false);
+    const isDragging = useRef(false);
 
     const calculateTimeFromMousePosition = useCallback((clientX: number) => {
       if (!rulerBarRef.current) {
@@ -39,7 +38,7 @@ export const Ruler = forwardRef<RulerHandle, RulerProps>(
 
     const handleMouseDown = useCallback(
       (e: React.MouseEvent) => {
-        setIsDragging(true);
+        isDragging.current = true;
 
         const newTime = calculateTimeFromMousePosition(e.clientX);
         setTime(newTime);
@@ -49,35 +48,37 @@ export const Ruler = forwardRef<RulerHandle, RulerProps>(
 
     const handleMouseMove = useCallback(
       (e: MouseEvent) => {
-        if (!isDragging) {
+        if (!isDragging.current) {
           return;
         }
 
         const newTime = calculateTimeFromMousePosition(e.clientX);
         setTime(newTime);
       },
-      [calculateTimeFromMousePosition, isDragging, setTime],
+      [calculateTimeFromMousePosition, setTime],
     );
 
+    const throttledHandleMouseMove = useThrottle(handleMouseMove, 10);
+
     const handleMouseUp = useCallback(() => {
-      if (!isDragging) {
+      if (!isDragging.current) {
         return;
       }
 
-      setIsDragging(false);
-    }, [isDragging]);
+      isDragging.current = false;
+    }, []);
 
+    // Prevents mouseMove and mouseUp events from being blocked when the playhead
+    // overlaps the ruler.
     useEffect(() => {
-      if (isDragging) {
-        window.addEventListener("mousemove", handleMouseMove);
-        window.addEventListener("mouseup", handleMouseUp);
-      }
+      window.addEventListener("mousemove", throttledHandleMouseMove);
+      window.addEventListener("mouseup", handleMouseUp);
 
       return () => {
-        window.removeEventListener("mousemove", handleMouseMove);
+        window.removeEventListener("mousemove", throttledHandleMouseMove);
         window.removeEventListener("mouseup", handleMouseUp);
       };
-    }, [isDragging, handleMouseMove, handleMouseUp]);
+    }, [handleMouseUp, throttledHandleMouseMove]);
 
     const setScrollLeft = useCallback((scrollLeft: number) => {
       if (!rulerRef.current) {
@@ -112,7 +113,7 @@ export const Ruler = forwardRef<RulerHandle, RulerProps>(
           style={{ width: `${duration}px` }}
           onMouseDown={handleMouseDown}
           data-testid="ruler-bar"
-        ></div>
+        />
       </div>
     );
   },
