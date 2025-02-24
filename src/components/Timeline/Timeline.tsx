@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { KeyframeList, KeyframeListHandle } from "./KeyframeList";
 import { PlayControls } from "./PlayControls";
 import { Playhead } from "./Playhead";
@@ -53,7 +53,7 @@ export const Timeline = () => {
     };
   }, [scrollLeft]);
 
-  const handleRulerScroll = (e: React.UIEvent) => {
+  const handleRulerScroll = useCallback((e: React.UIEvent) => {
     if (isScrolling.current) {
       return;
     }
@@ -66,9 +66,9 @@ export const Timeline = () => {
     setTimeout(() => {
       isScrolling.current = false;
     }, 0);
-  };
+  }, []);
 
-  const handleTrackListScroll = (e: React.UIEvent) => {
+  const handleTrackListScroll = useCallback((e: React.UIEvent) => {
     if (isScrolling.current) {
       return;
     }
@@ -80,9 +80,9 @@ export const Timeline = () => {
     setTimeout(() => {
       isScrolling.current = false;
     }, 0);
-  };
+  }, []);
 
-  const handleKeyframeListScroll = (e: React.UIEvent) => {
+  const handleKeyframeListScroll = useCallback((e: React.UIEvent) => {
     if (isScrolling.current) {
       return;
     }
@@ -96,7 +96,7 @@ export const Timeline = () => {
     setTimeout(() => {
       isScrolling.current = false;
     }, 0);
-  };
+  }, []);
 
   useEffect(() => {
     if (keyframeListRef.current && rulerRef.current) {

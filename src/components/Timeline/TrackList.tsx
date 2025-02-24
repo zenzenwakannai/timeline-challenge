@@ -1,4 +1,10 @@
-import { forwardRef, useCallback, useImperativeHandle, useRef } from "react";
+import {
+  forwardRef,
+  memo,
+  useCallback,
+  useImperativeHandle,
+  useRef,
+} from "react";
 
 export type TrackListProps = {
   onScroll: (e: React.UIEvent) => void;
@@ -8,8 +14,8 @@ export type TrackListHandle = {
   setScrollTop: (scrollTop: number) => void;
 };
 
-export const TrackList = forwardRef<TrackListHandle, TrackListProps>(
-  ({ onScroll }, ref) => {
+export const TrackList = memo(
+  forwardRef<TrackListHandle, TrackListProps>(({ onScroll }, ref) => {
     const trackListRef = useRef<HTMLDivElement>(null);
 
     const setScrollTop = useCallback((scrollTop: number) => {
@@ -67,7 +73,7 @@ export const TrackList = forwardRef<TrackListHandle, TrackListProps>(
         </div>
       </div>
     );
-  },
+  }),
 );
 
 TrackList.displayName = "TrackList";

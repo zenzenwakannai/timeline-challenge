@@ -1,5 +1,11 @@
 import _ from "lodash";
-import { forwardRef, useCallback, useImperativeHandle, useRef } from "react";
+import {
+  forwardRef,
+  memo,
+  useCallback,
+  useImperativeHandle,
+  useRef,
+} from "react";
 import { Segment } from "./Segment";
 import { TIMELINE_HORIZONTAL_SPACING } from "../../constants";
 
@@ -15,54 +21,56 @@ export type KeyframeListHandle = {
   setScrollTop: (scrollTop: number) => void;
 };
 
-export const KeyframeList = forwardRef<KeyframeListHandle, KeyframeListProps>(
-  ({ duration, onScroll }, ref) => {
-    const keyframeListRef = useRef<HTMLDivElement>(null);
+export const KeyframeList = memo(
+  forwardRef<KeyframeListHandle, KeyframeListProps>(
+    ({ duration, onScroll }, ref) => {
+      const keyframeListRef = useRef<HTMLDivElement>(null);
 
-    const setScrollLeft = useCallback((scrollLeft: number) => {
-      requestAnimationFrame(() => {
-        if (keyframeListRef.current) {
-          keyframeListRef.current.scrollLeft = scrollLeft;
-        }
-      });
-    }, []);
+      const setScrollLeft = useCallback((scrollLeft: number) => {
+        requestAnimationFrame(() => {
+          if (keyframeListRef.current) {
+            keyframeListRef.current.scrollLeft = scrollLeft;
+          }
+        });
+      }, []);
 
-    const setScrollTop = useCallback((scrollTop: number) => {
-      requestAnimationFrame(() => {
-        if (keyframeListRef.current) {
-          keyframeListRef.current.scrollTop = scrollTop;
-        }
-      });
-    }, []);
+      const setScrollTop = useCallback((scrollTop: number) => {
+        requestAnimationFrame(() => {
+          if (keyframeListRef.current) {
+            keyframeListRef.current.scrollTop = scrollTop;
+          }
+        });
+      }, []);
 
-    useImperativeHandle(
-      ref,
-      () => ({
-        getScrollLeft: () => keyframeListRef.current?.scrollLeft,
-        getScrollTop: () => keyframeListRef.current?.scrollTop,
-        setScrollLeft,
-        setScrollTop,
-      }),
-      [setScrollLeft, setScrollTop],
-    );
+      useImperativeHandle(
+        ref,
+        () => ({
+          getScrollLeft: () => keyframeListRef.current?.scrollLeft,
+          getScrollTop: () => keyframeListRef.current?.scrollTop,
+          setScrollLeft,
+          setScrollTop,
+        }),
+        [setScrollLeft, setScrollTop],
+      );
 
-    return (
-      <div
-        ref={keyframeListRef}
-        className="min-w-0 overflow-auto"
-        style={{
-          paddingLeft: TIMELINE_HORIZONTAL_SPACING,
-          paddingRight: TIMELINE_HORIZONTAL_SPACING,
-        }}
-        onScroll={onScroll}
-        data-testid="keyframe-list"
-      >
-        {_.range(10).map((index) => (
-          <Segment key={index} duration={duration} />
-        ))}
-      </div>
-    );
-  },
+      return (
+        <div
+          ref={keyframeListRef}
+          className="min-w-0 overflow-auto"
+          style={{
+            paddingLeft: TIMELINE_HORIZONTAL_SPACING,
+            paddingRight: TIMELINE_HORIZONTAL_SPACING,
+          }}
+          onScroll={onScroll}
+          data-testid="keyframe-list"
+        >
+          {_.range(10).map((index) => (
+            <Segment key={index} duration={duration} />
+          ))}
+        </div>
+      );
+    },
+  ),
 );
 
 KeyframeList.displayName = "KeyframeList";
