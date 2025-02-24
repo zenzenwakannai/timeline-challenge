@@ -1,4 +1,4 @@
-import _ from "lodash";
+import { range } from "lodash";
 import {
   forwardRef,
   memo,
@@ -64,7 +64,7 @@ export const KeyframeList = memo(
           onScroll={onScroll}
           data-testid="keyframe-list"
         >
-          {_.range(10).map((index) => (
+          {range(10).map((index) => (
             <Segment key={index} duration={duration} />
           ))}
         </div>

@@ -1,4 +1,4 @@
-import _ from "lodash";
+import { clamp } from "lodash";
 import { memo, useCallback, useEffect } from "react";
 import { NumberInput } from "./NumberInput";
 import { MAX_DURATION, MIN_DURATION, MIN_TIME } from "../../constants";
@@ -14,7 +14,7 @@ export type PlayControlsProps = {
 export const PlayControls = memo(
   ({ time, setTime, duration, setDuration }: PlayControlsProps) => {
     useEffect(() => {
-      setTime(_.clamp(time, MIN_TIME, duration));
+      setTime(clamp(time, MIN_TIME, duration));
     }, [duration, setTime, time]);
 
     const handleTimeChange = useCallback(

@@ -1,3 +1,4 @@
+import { throttle } from "lodash";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { KeyframeList, KeyframeListHandle } from "./KeyframeList";
 import { PlayControls } from "./PlayControls";
@@ -21,17 +22,19 @@ export const Timeline = () => {
 
   useEffect(() => {
     if (timelineRef.current) {
-      const resizeObserver = new ResizeObserver((entries) => {
+      const handleResize = throttle((entries: ResizeObserverEntry[]) => {
         const entry = entries[0];
 
         if (entry) {
           setRulerWidth(entry.contentRect.width - CONTROLS_COLUMN_WIDTH);
         }
-      });
+      }, 16);
 
+      const resizeObserver = new ResizeObserver(handleResize);
       resizeObserver.observe(timelineRef.current);
 
       return () => {
+        handleResize.cancel();
         resizeObserver.disconnect();
       };
     }
