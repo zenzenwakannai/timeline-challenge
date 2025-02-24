@@ -18,6 +18,7 @@ export const Timeline = () => {
   const rulerRef = useRef<RulerHandle>(null);
   const trackListRef = useRef<TrackListHandle>(null);
   const keyframeListRef = useRef<KeyframeListHandle>(null);
+
   const isScrolling = useRef(false);
 
   useEffect(() => {
@@ -49,9 +50,9 @@ export const Timeline = () => {
     keyframeListRef.current?.setScrollLeft(newScrollLeft);
     setScrollLeft(newScrollLeft);
 
-    requestAnimationFrame(() => {
+    setTimeout(() => {
       isScrolling.current = false;
-    });
+    }, 0);
   };
 
   const handleTrackListScroll = (e: React.UIEvent) => {
@@ -63,9 +64,9 @@ export const Timeline = () => {
     const { scrollTop } = e.currentTarget;
     keyframeListRef.current?.setScrollTop(scrollTop);
 
-    requestAnimationFrame(() => {
+    setTimeout(() => {
       isScrolling.current = false;
-    });
+    }, 0);
   };
 
   const handleKeyframeListScroll = (e: React.UIEvent) => {
@@ -79,9 +80,9 @@ export const Timeline = () => {
     trackListRef.current?.setScrollTop(scrollTop);
     setScrollLeft(newScrollLeft);
 
-    requestAnimationFrame(() => {
+    setTimeout(() => {
       isScrolling.current = false;
-    });
+    }, 0);
   };
 
   return (

@@ -17,19 +17,19 @@ export const KeyframeList = forwardRef<KeyframeListHandle, KeyframeListProps>(
     const keyframeListRef = useRef<HTMLDivElement>(null);
 
     const setScrollLeft = useCallback((scrollLeft: number) => {
-      if (!keyframeListRef.current) {
-        return;
-      }
-
-      keyframeListRef.current.scrollLeft = scrollLeft;
+      requestAnimationFrame(() => {
+        if (keyframeListRef.current) {
+          keyframeListRef.current.scrollLeft = scrollLeft;
+        }
+      });
     }, []);
 
     const setScrollTop = useCallback((scrollTop: number) => {
-      if (!keyframeListRef.current) {
-        return;
-      }
-
-      keyframeListRef.current.scrollTop = scrollTop;
+      requestAnimationFrame(() => {
+        if (keyframeListRef.current) {
+          keyframeListRef.current.scrollTop = scrollTop;
+        }
+      });
     }, []);
 
     useImperativeHandle(

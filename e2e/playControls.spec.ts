@@ -1,6 +1,8 @@
 import { expect, test } from "@playwright/test";
+import { getTranslateX } from "../src/utils/playwright";
 
 const URL = "http://localhost:3000";
+
 const CURRENT_TIME_INPUT_TEST_ID = "current-time-input";
 const DURATION_INPUT_TEST_ID = "duration-input";
 const PLAYHEAD_TEST_ID = "playhead";
@@ -119,25 +121,14 @@ test.describe("PlayControls", () => {
     );
     const playhead = page.locator(`[data-testid="${PLAYHEAD_TEST_ID}"]`);
 
-    const getTranslateX = async () => {
-      return await playhead.evaluate((el) => {
-        const transform = getComputedStyle(el).transform;
-        const match = transform.match(
-          // Get the `x` value from `matrix(a, b, c, d, x, y)`
-          /matrix\([^,]+, [^,]+, [^,]+, [^,]+, ([^,]+), [^,]+\)/,
-        );
-        return match ? parseFloat(match[1]) : null;
-      });
-    };
-
-    const oldTranslateX = await getTranslateX();
+    const oldTranslateX = await getTranslateX(playhead);
 
     await currentTimeInput.fill("100");
-    const newTranslateXBeforeEnter = await getTranslateX();
+    const newTranslateXBeforeEnter = await getTranslateX(playhead);
     expect(newTranslateXBeforeEnter).toBe(oldTranslateX);
 
     await currentTimeInput.press("Enter");
-    const newTranslateXAfterEnter = await getTranslateX();
+    const newTranslateXAfterEnter = await getTranslateX(playhead);
     expect(newTranslateXAfterEnter).not.toBe(oldTranslateX);
   });
 });

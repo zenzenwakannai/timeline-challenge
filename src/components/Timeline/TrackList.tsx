@@ -13,11 +13,11 @@ export const TrackList = forwardRef<TrackListHandle, TrackListProps>(
     const trackListRef = useRef<HTMLDivElement>(null);
 
     const setScrollTop = useCallback((scrollTop: number) => {
-      if (!trackListRef.current) {
-        return;
-      }
-
-      trackListRef.current.scrollTop = scrollTop;
+      requestAnimationFrame(() => {
+        if (trackListRef.current) {
+          trackListRef.current.scrollTop = scrollTop;
+        }
+      });
     }, []);
 
     useImperativeHandle(

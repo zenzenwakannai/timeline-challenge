@@ -81,11 +81,11 @@ export const Ruler = forwardRef<RulerHandle, RulerProps>(
     }, [handleMouseUp, throttledHandleMouseMove]);
 
     const setScrollLeft = useCallback((scrollLeft: number) => {
-      if (!rulerRef.current) {
-        return;
-      }
-
-      rulerRef.current.scrollLeft = scrollLeft;
+      requestAnimationFrame(() => {
+        if (rulerRef.current) {
+          rulerRef.current.scrollLeft = scrollLeft;
+        }
+      });
     }, []);
 
     useImperativeHandle(

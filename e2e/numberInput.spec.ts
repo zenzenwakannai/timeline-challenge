@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 const URL = "http://localhost:3000";
+
 const INPUT_TEST_ID = "current-time-input";
 const INPUT_INITIAL_VALUE = 0;
 const INPUT_STEP = 10;
