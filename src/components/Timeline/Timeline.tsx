@@ -43,7 +43,7 @@ export const Timeline = () => {
   // beginning
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
-      if (scrollLeft === 0 && time === 0 && e.deltaX < 0) {
+      if (scrollLeft === 0 && e.deltaX < 0) {
         e.preventDefault();
       }
     };
@@ -53,7 +53,7 @@ export const Timeline = () => {
     return () => {
       document.removeEventListener("wheel", handleWheel);
     };
-  }, [scrollLeft, time]);
+  }, [scrollLeft]);
 
   const handleRulerScroll = (e: React.UIEvent) => {
     if (isScrolling.current) {
