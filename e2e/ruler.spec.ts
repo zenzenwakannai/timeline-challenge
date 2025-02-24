@@ -52,7 +52,7 @@ test.describe("Ruler", () => {
     const ruler = page.locator(`[data-testid="${RULER_TEST_ID}"]`);
 
     await ruler.evaluate((el) => (el.scrollLeft = 200));
-    await page.waitForTimeout(100);
+    await page.waitForTimeout(200);
     await expect(keyframeList).toHaveJSProperty("scrollLeft", 200);
   });
 

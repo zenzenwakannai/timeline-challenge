@@ -19,7 +19,7 @@ test.describe("TrackList", () => {
     const trackList = page.locator(`[data-testid="${TRACK_LIST_TEST_ID}"]`);
 
     await trackList.evaluate((el) => (el.scrollTop = 100));
-    await page.waitForTimeout(100);
+    await page.waitForTimeout(200);
     await expect(keyframeList).toHaveJSProperty("scrollTop", 100);
   });
 });

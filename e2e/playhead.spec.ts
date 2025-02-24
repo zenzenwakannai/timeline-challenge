@@ -32,7 +32,7 @@ test.describe("Playhead", () => {
 
     await ruler.evaluate((el) => (el.scrollLeft = 0));
     expect(ruler).toHaveJSProperty("scrollLeft", 0);
-    await page.waitForTimeout(100);
+    await page.waitForTimeout(200);
 
     const initialPlayheadTranslateX = await getTranslateX(playhead);
     if (initialPlayheadTranslateX === null) {
@@ -41,14 +41,14 @@ test.describe("Playhead", () => {
 
     await ruler.evaluate((el) => (el.scrollLeft = 100));
     expect(ruler).toHaveJSProperty("scrollLeft", 100);
-    await page.waitForTimeout(100);
+    await page.waitForTimeout(200);
 
     const updatedPlayheadTranslateX1 = await getTranslateX(playhead);
     expect(updatedPlayheadTranslateX1).not.toBe(initialPlayheadTranslateX);
 
     await keyframeList.evaluate((el) => (el.scrollLeft = 200));
     expect(keyframeList).toHaveJSProperty("scrollLeft", 200);
-    await page.waitForTimeout(100);
+    await page.waitForTimeout(200);
 
     const updatedPlayheadTranslateX2 = await getTranslateX(playhead);
     expect(updatedPlayheadTranslateX2).not.toBe(initialPlayheadTranslateX);
@@ -73,7 +73,7 @@ test.describe("Playhead", () => {
 
     await ruler.evaluate((el) => (el.scrollLeft = 0));
     expect(ruler).toHaveJSProperty("scrollLeft", 0);
-    await page.waitForTimeout(100);
+    await page.waitForTimeout(200);
 
     const initialPlayheadTranslateX = await getTranslateX(playhead);
 
@@ -83,14 +83,14 @@ test.describe("Playhead", () => {
 
     await ruler.evaluate((el) => (el.scrollLeft = 100));
     expect(ruler).toHaveJSProperty("scrollLeft", 100);
-    await page.waitForTimeout(100);
+    await page.waitForTimeout(200);
 
     const updatedPlayheadTranslateX1 = await getTranslateX(playhead);
     expect(updatedPlayheadTranslateX1).toBe(initialPlayheadTranslateX - 100);
 
     await keyframeList.evaluate((el) => (el.scrollLeft = 200));
     expect(keyframeList).toHaveJSProperty("scrollLeft", 200);
-    await page.waitForTimeout(100);
+    await page.waitForTimeout(200);
 
     const updatedPlayheadTranslateX2 = await getTranslateX(playhead);
     expect(updatedPlayheadTranslateX2).toBe(initialPlayheadTranslateX - 200);
